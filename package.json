@@ -1,7 +1,7 @@
 {
-  "name": "template-rincewind",
+  "name": "marlatte-battleship",
   "version": "1.0.0",
-  "description": "template JSON",
+  "description": "A classic board game built with TDD.",
   "private": true,
   "scripts": {
     "test": "jest",
