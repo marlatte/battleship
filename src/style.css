@@ -1,22 +1,23 @@
 /* ---------------     Reboot     --------------- */
 
-*, *::before, *::after {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	/* color: unset; */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* color: unset; */
 }
 
 /* ---------------     /Reboot     --------------- */
 /* ---------------     Utilities & Universals     --------------- */
 
-:root{
-	--eg-var: red;
+:root {
+  --eg-var: red;
 }
 
 /* ---------------     /Utilities & Universals     --------------- */
 /* ---------------     CONTENT     --------------- */
-
 
 /* ---------------     Header     --------------- */
 /* ---------------     /Header     --------------- */
@@ -28,7 +29,5 @@
 
 /* ---------------     Footer     --------------- */
 /* ---------------     /Footer     --------------- */
-
-
 
 /* ---------------     /CONTENT     --------------- */
