@@ -8,7 +8,7 @@ const devMode = true;
 module.exports = {
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'inline-source-map' : 'source-map',
-  entry: { index: './src/index.js' },
+  entry: { index: './src/scripts/index.js' },
   output: {
     filename: devMode ? '[name].bundle.js' : 'main.js',
     path: path.resolve(__dirname, 'dist'),
