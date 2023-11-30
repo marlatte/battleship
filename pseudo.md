@@ -7,12 +7,12 @@ Player arranges ships on board. Player selects an empty square to drop a bomb. I
 ## Bottom Up
 
 -   What are the building blocks of your program? What units will it have?
-    -   Ship factory
-        -   length, health, vert?
-        -   hit(): --health
-        -   isSunk(): check health < 1
-        -   TEST each output
     -   GameBoard
+        -   Ship factory
+            -   length, health, vert?
+            -   hit(): --health
+            -   isSunk(): check health < 1
+            -   TEST each output
         -   Declare ships: Carrier, Battleship, Destroyer, Sub, Patrol(x2)
         -   Each player gets an offenseBoard and a defenseBoard
             -   Squares numbered 0-99
