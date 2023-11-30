@@ -32,7 +32,7 @@ Player arranges ships on board. Player selects an empty square to drop a bomb. I
 
 -   Create ships, players, and a game board
 -   Place ships
-    -   Cannot touch walls
+    -   Cannot exceed boundaries
         -   IF horizontal
             -   start position + ship.length !> end of row
         -   IF vertical

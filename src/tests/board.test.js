@@ -48,4 +48,9 @@ describe('offenseBoards', () => {
 
 describe('defenseBoards', () => {
     test.todo('There are boards for both players');
+    test.todo('A ship of length 1 can be assigned to a square');
+    test.todo('A ship of length 2 can be placed horizontally within the grid');
+    test.todo('A ship of length 2 can be placed vertically within the grid');
+    test.todo('A ship of length 5 can be placed either way within the grid');
+    test.todo('Ships can be placed without being overlapping or adjacent');
 });
