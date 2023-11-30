@@ -1,4 +1,4 @@
-import { OffenseBoards, ShipFactory } from '../scripts/board';
+import { DefenseBoards, OffenseBoards, ShipFactory } from '../scripts/board';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
@@ -32,13 +32,14 @@ describe('offenseBoards', () => {
         expect(OffenseBoards.player.length).toBe(100);
         expect(OffenseBoards.computer.length).toBe(100);
     });
-    test('Missed shots get marked on the board', () => {
+    test('Misses get marked on the board', () => {
         const currentPlayer = 'player';
         OffenseBoards[currentPlayer].fireShot(3);
         expect(OffenseBoards.player[3]).toBe(1);
     });
     test('Hits get marked on the board', () => {
         const currentPlayer = 'player';
+        DefenseBoards.player[50] = 'destroyer';
         OffenseBoards[currentPlayer].fireShot(3);
         OffenseBoards[currentPlayer].fireShot(50);
         expect(OffenseBoards.player[3]).toBe(1);
@@ -47,8 +48,15 @@ describe('offenseBoards', () => {
 });
 
 describe('defenseBoards', () => {
-    test.todo('There are boards for both players');
-    test.todo('A ship of length 1 can be assigned to a square');
+    test('There are boards for both players', () => {
+        expect(DefenseBoards.player).toBeTruthy();
+        expect(DefenseBoards.computer).toBeTruthy();
+    });
+    test('A ship of length 1 can be assigned to a square', () => {
+        const mockShip = ShipFactory();
+        DefenseBoards.player.placeShip(mockShip, 5);
+        expect(DefenseBoards.player[5]).toBe(mockShip);
+    });
     test.todo('A ship of length 2 can be placed horizontally within the grid');
     test.todo('A ship of length 2 can be placed vertically within the grid');
     test.todo('A ship of length 5 can be placed either way within the grid');

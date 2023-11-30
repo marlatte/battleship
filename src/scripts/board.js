@@ -1,6 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
 import currentPlayer from '.';
 
-/* eslint-disable no-plusplus */
 export function ShipFactory(length) {
     let health = length;
     const hit = () => --health;
@@ -15,7 +16,16 @@ export function ShipFactory(length) {
     return { length, hit, isSunk, changeVertical, isVertical };
 }
 
-const DefenseBoards = (() => ({ player: { 50: 'destroyer' }, computer: {} }))();
+export const DefenseBoards = (() => {
+    const player = {};
+    const computer = {};
+    [player, computer].forEach((obj) => {
+        obj.placeShip = (ship, square) => {
+            obj[square] = ship;
+        };
+    });
+    return { player, computer };
+})();
 
 export const OffenseBoards = (() => {
     const player = [];
@@ -27,13 +37,10 @@ export const OffenseBoards = (() => {
     }
 
     [player, computer].forEach((arr) => {
-        // eslint-disable-next-line no-param-reassign
         arr.fireShot = (square) => {
             if (DefenseBoards[currentPlayer][square]) {
-                // eslint-disable-next-line no-param-reassign
                 arr[square] = 2;
             } else {
-                // eslint-disable-next-line no-param-reassign
                 arr[square] = 1;
             }
         };
