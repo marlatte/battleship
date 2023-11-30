@@ -7,16 +7,23 @@ Player arranges ships on board. Player selects an empty square to drop a bomb. I
 ## Bottom Up
 
 -   What are the building blocks of your program? What units will it have?
-    -   Ship
+    -   Ship factory
         -   length, health, vert?
         -   hit(): --health
         -   isSunk(): check health < 1
+        -   TEST each output
     -   GameBoard
+        -   Declare ships: Carrier, Battleship, Destroyer, Sub, Patrol(x2)
         -   Each player gets an offenseBoard and a defenseBoard
-            -   Stored as offense = {player: [...], comp: [...]}, etc.
-            -   Numbers for offenseBoard: 0: empty, 1: miss, 2: hit
-            -   Numbers for defenseBoard: 0: empty, 1: ship
-    -   GamePlay
+            -   Squares numbered 0-99
+            -   defenseBoard = coordinate lookup: {player: {"2": Destroyer}}, etc.
+            -   Stored as offenseBoard = {player: [0, 0, 2], comp: [...]}, etc.
+                -   Numbers for offenseBoard: 0: empty, 1: miss, 2: hit
+        -   Placement
+            -   TEST calculations
+    -   GameController
+        -   placement phase
+        -   playRound phase
 -   List out any tools, methods, or patterns you want to use.
     -   Pubsub
 -   Mark places where you'll use Unit Tests.
@@ -25,6 +32,11 @@ Player arranges ships on board. Player selects an empty square to drop a bomb. I
 
 -   Create ships, players, and a game board
 -   Place ships
+    -   Cannot touch walls
+        -   IF horizontal
+            -   start position + ship.length !> end of row
+        -   IF vertical
+            -   start position + ship.length !> end of column
     -   Cannot be overlapping or adjacent.
 -   Player clicks a square: playRound(...coords)
     -   IF square has been clicked already, do nothing
