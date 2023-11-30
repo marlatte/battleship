@@ -1,4 +1,4 @@
-import { ShipFactory } from './gameboard';
+import { OffenseBoards, ShipFactory } from './gameboard';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
@@ -21,4 +21,31 @@ describe('ShipFactory', () => {
         ship.hit();
         expect(ship.isSunk()).toBe(true);
     });
+});
+
+describe.skip('offenseBoards', () => {
+    test('There are board arrays for both players', () => {
+        expect(OffenseBoards.player).toBeTruthy();
+        expect(OffenseBoards.computer).toBeTruthy();
+    });
+    test('Each board is 100 items long', () => {
+        expect(OffenseBoards.player.length).toBe(100);
+        expect(OffenseBoards.computer.length).toBe(100);
+    });
+    test('Missed shots get marked on the board', () => {
+        const currentPlayer = 'player';
+        OffenseBoards[currentPlayer].fireShot(3);
+        expect(OffenseBoards.player[3]).toBe(1);
+    });
+    test('Hits get marked on the board', () => {
+        const currentPlayer = 'player';
+        OffenseBoards[currentPlayer].fireShot(3);
+        OffenseBoards[currentPlayer].fireShot(50);
+        expect(OffenseBoards.player[3]).toBe(1);
+        expect(OffenseBoards.player[50]).toBe(2);
+    });
+});
+
+describe('defenseBoards', () => {
+    test.todo('There are boards for both players');
 });

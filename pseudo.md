@@ -13,12 +13,12 @@ Player arranges ships on board. Player selects an empty square to drop a bomb. I
             -   hit(): --health
             -   isSunk(): check health < 1
             -   TEST each output
-        -   Declare ships: Carrier, Battleship, Destroyer, Sub, Patrol(x2)
         -   Each player gets an offenseBoard and a defenseBoard
             -   Squares numbered 0-99
-            -   defenseBoard = coordinate lookup: {player: {"2": Destroyer}}, etc.
-            -   Stored as offenseBoard = {player: [0, 0, 2], comp: [...]}, etc.
-                -   Numbers for offenseBoard: 0: empty, 1: miss, 2: hit
+            -   defenseBoards = coordinate lookup: {player: {"2": Destroyer}}, etc.
+            -   Stored as offenseBoards = {player: [0, 0, 2], comp: [...]}, etc.
+                -   Numbers for offenseBoards: 0: empty, 1: miss, 2: hit
+        -   Declare ships: Carrier, Battleship, Destroyer, Sub, Patrol(x2)
         -   Placement
             -   TEST calculations
     -   GameController
