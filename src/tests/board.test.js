@@ -1,4 +1,4 @@
-import { OffenseBoards, ShipFactory } from './board';
+import { OffenseBoards, ShipFactory } from '../scripts/board';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
@@ -23,7 +23,7 @@ describe('ShipFactory', () => {
     });
 });
 
-describe.skip('offenseBoards', () => {
+describe('offenseBoards', () => {
     test('There are board arrays for both players', () => {
         expect(OffenseBoards.player).toBeTruthy();
         expect(OffenseBoards.computer).toBeTruthy();

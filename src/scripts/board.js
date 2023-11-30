@@ -1,3 +1,5 @@
+import currentPlayer from '.';
+
 /* eslint-disable no-plusplus */
 export function ShipFactory(length) {
     let health = length;
@@ -24,15 +26,18 @@ export const OffenseBoards = (() => {
         computer[i] = 0;
     }
 
-    // [player, computer].forEach((arr) => {
-    //     arr.fireShot = (square) => {
-    //         if (DefenseBoards[currentPlayer][square]) {
-    //             arr[square] = 2;
-    //         } else {
-    //             arr[square] = 1;
-    //         }
-    //     };
-    // });
+    [player, computer].forEach((arr) => {
+        // eslint-disable-next-line no-param-reassign
+        arr.fireShot = (square) => {
+            if (DefenseBoards[currentPlayer][square]) {
+                // eslint-disable-next-line no-param-reassign
+                arr[square] = 2;
+            } else {
+                // eslint-disable-next-line no-param-reassign
+                arr[square] = 1;
+            }
+        };
+    });
 
     return { player, computer };
 })();
