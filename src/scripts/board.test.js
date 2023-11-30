@@ -1,4 +1,4 @@
-import { OffenseBoards, ShipFactory } from './gameboard';
+import { OffenseBoards, ShipFactory } from './board';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
