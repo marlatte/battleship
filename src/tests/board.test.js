@@ -90,10 +90,18 @@ describe('defenseBoards', () => {
     });
     test('A ship of length 5 CANNOT be placed across 2 rows', () => {
         const mockShip2 = ShipFactory(5);
-        mockShip2.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip2, 78);
         expect(DefenseBoards.player[78]).toBeFalsy();
         expect(DefenseBoards.player[83]).toBeFalsy();
     });
-    test.todo('Ships can be placed without being overlapping or adjacent');
+    test('Ships can be placed without being overlapping or adjacent', () => {
+        const mockShip3 = ShipFactory(3);
+        const mockShip4 = ShipFactory(3);
+        mockShip3.id = 3;
+        mockShip4.id = 4;
+        DefenseBoards[currentPlayer].placeShip(mockShip3, 70);
+        DefenseBoards[currentPlayer].placeShip(mockShip4, 70);
+        expect(DefenseBoards.player[70].id).toBe(3);
+        expect(DefenseBoards.player[73].id).toBe(3);
+    });
 });
