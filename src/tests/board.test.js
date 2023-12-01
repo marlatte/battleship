@@ -1,4 +1,5 @@
 import { DefenseBoards, OffenseBoards, ShipFactory } from '../scripts/board';
+import currentPlayer from '../scripts';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
@@ -33,12 +34,10 @@ describe('offenseBoards', () => {
         expect(OffenseBoards.computer.length).toBe(100);
     });
     test('Misses get marked on the board', () => {
-        const currentPlayer = 'player';
         OffenseBoards[currentPlayer].fireShot(3);
         expect(OffenseBoards.player[3]).toBe(1);
     });
     test('Hits get marked on the board', () => {
-        const currentPlayer = 'player';
         DefenseBoards.player[50] = 'destroyer';
         OffenseBoards[currentPlayer].fireShot(3);
         OffenseBoards[currentPlayer].fireShot(50);
@@ -53,12 +52,48 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.computer).toBeTruthy();
     });
     test('A ship of length 1 can be assigned to a square', () => {
-        const mockShip = ShipFactory();
-        DefenseBoards.player.placeShip(mockShip, 5);
-        expect(DefenseBoards.player[5]).toBe(mockShip);
+        const mockShip = ShipFactory(1);
+        DefenseBoards[currentPlayer].placeShip(mockShip, 0);
+        expect(DefenseBoards.player[0]).toBe(mockShip);
     });
-    test.todo('A ship of length 2 can be placed horizontally within the grid');
-    test.todo('A ship of length 2 can be placed vertically within the grid');
-    test.todo('A ship of length 5 can be placed either way within the grid');
+    test('A ship of length 2 can be placed horizontally within the grid', () => {
+        const mockShip = ShipFactory(2);
+        DefenseBoards[currentPlayer].placeShip(mockShip, 2);
+        expect(DefenseBoards.player[2]).toBe(mockShip);
+        expect(DefenseBoards.player[3]).toBe(mockShip);
+    });
+    test('A ship of length 2 CANNOT be placed horizontally across 2 rows', () => {
+        const mockShip = ShipFactory(2);
+        DefenseBoards[currentPlayer].placeShip(mockShip, 9);
+        expect(DefenseBoards.player[9]).toBeFalsy();
+        expect(DefenseBoards.player[10]).toBeFalsy();
+    });
+    test('A ship of length 2 can be placed vertically within the grid', () => {
+        const mockShip = ShipFactory(2);
+        mockShip.changeVertical();
+        DefenseBoards[currentPlayer].placeShip(mockShip, 10);
+        expect(DefenseBoards.player[10]).toBe(mockShip);
+        expect(DefenseBoards.player[20]).toBe(mockShip);
+    });
+    test('A ship of length 5 can be placed horizontally within the grid', () => {
+        const mockShip2 = ShipFactory(5);
+        DefenseBoards[currentPlayer].placeShip(mockShip2, 0);
+        expect(DefenseBoards.player[0]).toBe(mockShip2);
+        expect(DefenseBoards.player[4]).toBe(mockShip2);
+    });
+    test('A ship of length 5 can be placed vertically within the grid', () => {
+        const mockShip2 = ShipFactory(5);
+        mockShip2.changeVertical();
+        DefenseBoards[currentPlayer].placeShip(mockShip2, 10);
+        expect(DefenseBoards.player[10]).toBe(mockShip2);
+        expect(DefenseBoards.player[50]).toBe(mockShip2);
+    });
+    test('A ship of length 5 CANNOT be placed across 2 rows', () => {
+        const mockShip2 = ShipFactory(5);
+        mockShip2.changeVertical();
+        DefenseBoards[currentPlayer].placeShip(mockShip2, 78);
+        expect(DefenseBoards.player[78]).toBeFalsy();
+        expect(DefenseBoards.player[83]).toBeFalsy();
+    });
     test.todo('Ships can be placed without being overlapping or adjacent');
 });

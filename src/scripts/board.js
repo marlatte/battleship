@@ -20,8 +20,21 @@ export const DefenseBoards = (() => {
     const player = {};
     const computer = {};
     [player, computer].forEach((obj) => {
-        obj.placeShip = (ship, square) => {
-            obj[square] = ship;
+        obj.placeShip = (ship, start) => {
+            const spots = [];
+            const multiplier = ship.isVertical() ? 10 : 1;
+            const end = start + multiplier * ship.length;
+            for (let i = start; i < end; i += multiplier) {
+                const vertBool = i > 100;
+                const horizBool = !(i % 10) || vertBool;
+                if ((ship.isVertical() ? vertBool : horizBool) && i !== start) {
+                    return;
+                }
+                spots.push(i);
+            }
+            spots.forEach((i) => {
+                obj[i] = ship;
+            });
         };
     });
     return { player, computer };
