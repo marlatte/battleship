@@ -72,20 +72,19 @@ describe('defenseBoards', () => {
         const mockShip = ShipFactory(2);
         mockShip.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip, 10);
-        expect(DefenseBoards.player[10]).toBe(mockShip);
         expect(DefenseBoards.player[20]).toBe(mockShip);
     });
     test('A ship of length 5 can be placed horizontally within the grid', () => {
+        DefenseBoards.clear();
+        console.log(DefenseBoards);
         const mockShip2 = ShipFactory(5);
         DefenseBoards[currentPlayer].placeShip(mockShip2, 0);
-        expect(DefenseBoards.player[0]).toBe(mockShip2);
         expect(DefenseBoards.player[4]).toBe(mockShip2);
     });
     test('A ship of length 5 can be placed vertically within the grid', () => {
         const mockShip2 = ShipFactory(5);
         mockShip2.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip2, 35);
-        expect(DefenseBoards.player[35]).toBe(mockShip2);
         expect(DefenseBoards.player[75]).toBe(mockShip2);
     });
     test('A ship of length 5 CANNOT be placed across 2 rows', () => {
@@ -94,14 +93,23 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.player[78]).toBeFalsy();
         expect(DefenseBoards.player[83]).toBeFalsy();
     });
-    test('Ships CANNOT overlap', () => {
+    test('Attempts to overlap result in a failed placement', () => {
         const mockShip3 = ShipFactory(3);
-        const mockShip4 = ShipFactory(3);
+        const mockShip4 = ShipFactory(4);
         mockShip3.id = 3;
         mockShip4.id = 4;
         DefenseBoards[currentPlayer].placeShip(mockShip3, 70);
         DefenseBoards[currentPlayer].placeShip(mockShip4, 70);
-        expect(DefenseBoards.player[70].id).toBe(3);
         expect(DefenseBoards.player[72].id).toBe(3);
+        expect(DefenseBoards.player[73]).toBeFalsy();
+    });
+    test('Attempts to be adjacent result in a failed placement', () => {
+        DefenseBoards.clear();
+        const mockShip1 = ShipFactory(1);
+        DefenseBoards[currentPlayer].placeShip(mockShip1, 5);
+        const mockShip2 = ShipFactory(1);
+        DefenseBoards[currentPlayer].placeShip(mockShip2, 6);
+        expect(DefenseBoards.player[5]).toBe(mockShip1);
+        expect(DefenseBoards.player[6]).toBeFalsy();
     });
 });

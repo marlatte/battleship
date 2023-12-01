@@ -17,35 +17,45 @@ export function ShipFactory(length) {
 }
 
 export const DefenseBoards = (() => {
-    let player = {};
-    let computer = {};
-    [player, computer].forEach((obj) => {
-        obj.placeShip = (ship, start) => {
-            const spots = [];
-            const multiplier = ship.isVertical() ? 10 : 1;
-            const end = start + multiplier * ship.length;
-            for (let i = start; i < end; i += multiplier) {
-                const vertBool = i > 100;
-                const horizBool = !(i % 10) || vertBool;
-                if ((ship.isVertical() ? vertBool : horizBool) && i !== start) {
-                    return;
+    const player = {};
+    const computer = {};
+    const clear = () => {
+        Object.keys(player).forEach((key) => {
+            delete player[key];
+        });
+        Object.keys(computer).forEach((key) => {
+            delete computer[key];
+        });
+        [player, computer].forEach((obj) => {
+            obj.placeShip = (ship, start) => {
+                const spots = [];
+                const multiplier = ship.isVertical() ? 10 : 1;
+                const end = start + multiplier * ship.length;
+                for (let i = start; i < end; i += multiplier) {
+                    const vertBool = i > 100;
+                    const horizBool = !(i % 10) || vertBool;
+                    const overlapAdj = [0, -1, 1, -10, 10]
+                        .map((num) => obj[i + num])
+                        .filter(Boolean);
+                    if (
+                        (ship.isVertical() ? vertBool : horizBool) &&
+                        (i !== start || overlapAdj.length)
+                    ) {
+                        return;
+                    }
+                    spots.push(i);
                 }
-                spots.push(i);
-            }
-            spots.forEach((i) => {
-                if (!obj[i]) {
+                spots.forEach((i) => {
                     obj[i] = ship;
-                }
-            });
-        };
-    });
+                });
+            };
+        });
+    };
+    clear();
     return {
         player,
         computer,
-        clear: () => {
-            player = {};
-            computer = {};
-        },
+        clear,
     };
 })();
 
