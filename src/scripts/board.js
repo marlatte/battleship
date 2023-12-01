@@ -17,8 +17,8 @@ export function ShipFactory(length) {
 }
 
 export const DefenseBoards = (() => {
-    const player = {};
-    const computer = {};
+    let player = {};
+    let computer = {};
     [player, computer].forEach((obj) => {
         obj.placeShip = (ship, start) => {
             const spots = [];
@@ -33,11 +33,20 @@ export const DefenseBoards = (() => {
                 spots.push(i);
             }
             spots.forEach((i) => {
-                obj[i] = ship;
+                if (!obj[i]) {
+                    obj[i] = ship;
+                }
             });
         };
     });
-    return { player, computer };
+    return {
+        player,
+        computer,
+        clear: () => {
+            player = {};
+            computer = {};
+        },
+    };
 })();
 
 export const OffenseBoards = (() => {
