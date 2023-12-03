@@ -1,2 +1,2 @@
-const currentPlayer = 'player';
-export default currentPlayer;
+const [currentPlayer, opponent] = ['player', 'computer'];
+export { currentPlayer, opponent };
