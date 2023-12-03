@@ -1,8 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
-import currentPlayer from '.';
+import { currentPlayer } from '.';
+
+let counter = 0;
 
 export function ShipFactory(length) {
+    const id = ++counter;
+
     let health = length;
     const hit = () => --health;
 
@@ -13,7 +17,7 @@ export function ShipFactory(length) {
     const isVertical = () => vertical;
 
     const isSunk = () => health < 1;
-    return { length, hit, isSunk, changeVertical, isVertical };
+    return { id, length, health, hit, isSunk, changeVertical, isVertical };
 }
 
 export const DefenseBoards = (() => {
@@ -26,6 +30,8 @@ export const DefenseBoards = (() => {
         Object.keys(computer).forEach((key) => {
             delete computer[key];
         });
+
+        // Reassign methods
         [player, computer].forEach((obj) => {
             obj.placeShip = (ship, start) => {
                 const spots = [];
@@ -51,6 +57,14 @@ export const DefenseBoards = (() => {
                     obj[i] = ship;
                 });
             };
+            obj.getShipsLeft = () => {
+                const ships = [
+                    ...new Set(Object.values(obj).filter((item) => item.id)),
+                ];
+                ships.map((ship) => !ship.isSunk());
+                console.log(ships);
+                return ships.length;
+            };
         });
     };
     clear();
@@ -71,12 +85,15 @@ export const OffenseBoards = (() => {
     }
 
     [player, computer].forEach((arr) => {
-        arr.fireShot = (square) => {
-            if (DefenseBoards[currentPlayer][square]) {
+        arr.receiveAttack = (square) => {
+            const ship = DefenseBoards[currentPlayer][square];
+            if (ship) {
+                ship.hit();
                 arr[square] = 2;
-            } else {
-                arr[square] = 1;
+                return ship.isSunk();
             }
+            arr[square] = 1;
+            return undefined;
         };
     });
 

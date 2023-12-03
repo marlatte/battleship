@@ -1,5 +1,5 @@
 import { DefenseBoards, OffenseBoards, ShipFactory } from '../scripts/board';
-import currentPlayer from '../scripts';
+import { currentPlayer, opponent } from '../scripts';
 
 describe('ShipFactory', () => {
     test('ship exists', () => {
@@ -21,28 +21,6 @@ describe('ShipFactory', () => {
         ship.hit();
         ship.hit();
         expect(ship.isSunk()).toBe(true);
-    });
-});
-
-describe('offenseBoards', () => {
-    test('There are board arrays for both players', () => {
-        expect(OffenseBoards.player).toBeTruthy();
-        expect(OffenseBoards.computer).toBeTruthy();
-    });
-    test('Each board is 100 items long', () => {
-        expect(OffenseBoards.player.length).toBe(100);
-        expect(OffenseBoards.computer.length).toBe(100);
-    });
-    test('Misses get marked on the board', () => {
-        OffenseBoards[currentPlayer].fireShot(3);
-        expect(OffenseBoards.player[3]).toBe(1);
-    });
-    test('Hits get marked on the board', () => {
-        DefenseBoards.player[50] = 'destroyer';
-        OffenseBoards[currentPlayer].fireShot(3);
-        OffenseBoards[currentPlayer].fireShot(50);
-        expect(OffenseBoards.player[3]).toBe(1);
-        expect(OffenseBoards.player[50]).toBe(2);
     });
 });
 
@@ -76,7 +54,6 @@ describe('defenseBoards', () => {
     });
     test('A ship of length 5 can be placed horizontally within the grid', () => {
         DefenseBoards.clear();
-        console.log(DefenseBoards);
         const mockShip2 = ShipFactory(5);
         DefenseBoards[currentPlayer].placeShip(mockShip2, 0);
         expect(DefenseBoards.player[4]).toBe(mockShip2);
@@ -113,5 +90,47 @@ describe('defenseBoards', () => {
         DefenseBoards[currentPlayer].placeShip(mockShip2, 6);
         expect(DefenseBoards.player[5]).toBe(mockShip1);
         expect(DefenseBoards.player[6]).toBeFalsy();
+    });
+    test('Board checks how many ships left', () => {
+        DefenseBoards.clear();
+        const mockShip = ShipFactory(2);
+        DefenseBoards[currentPlayer].placeShip(mockShip, 5);
+        OffenseBoards[currentPlayer].receiveAttack(5);
+        expect(DefenseBoards.player.getShipsLeft()).toBe(1);
+        OffenseBoards[currentPlayer].receiveAttack(6);
+        console.log(DefenseBoards);
+        console.log(mockShip);
+        expect(DefenseBoards.player.getShipsLeft()).toBe(0);
+    });
+});
+
+describe('offenseBoards', () => {
+    test('There are board arrays for both players', () => {
+        expect(OffenseBoards.player).toBeTruthy();
+        expect(OffenseBoards.computer).toBeTruthy();
+    });
+    test('Each board is 100 items long', () => {
+        expect(OffenseBoards.player.length).toBe(100);
+        expect(OffenseBoards.computer.length).toBe(100);
+    });
+    test('Misses get marked on the board', () => {
+        OffenseBoards[currentPlayer].receiveAttack(3);
+        expect(OffenseBoards.player[3]).toBe(1);
+    });
+    test('Hits get marked on the board', () => {
+        DefenseBoards.clear();
+        const mockShip = ShipFactory(2);
+        DefenseBoards.player.placeShip(mockShip, 50);
+        OffenseBoards[currentPlayer].receiveAttack(3);
+        OffenseBoards[currentPlayer].receiveAttack(50);
+        expect(OffenseBoards.player[3]).toBe(1);
+        expect(OffenseBoards.player[50]).toBe(2);
+    });
+    test('Board checks if ship sunk after each hit', () => {
+        DefenseBoards.clear();
+        const mockShip = ShipFactory(2);
+        DefenseBoards.player.placeShip(mockShip, 50);
+        expect(OffenseBoards[currentPlayer].receiveAttack(50)).toBeFalsy();
+        expect(OffenseBoards[currentPlayer].receiveAttack(51)).toBeTruthy();
     });
 });
