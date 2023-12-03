@@ -38,8 +38,10 @@ export const DefenseBoards = (() => {
                         .map((num) => obj[i + num])
                         .filter(Boolean);
                     if (
-                        (ship.isVertical() ? vertBool : horizBool) &&
-                        (i !== start || overlapAdj.length)
+                        (ship.isVertical()
+                            ? vertBool
+                            : horizBool && i !== start) ||
+                        overlapAdj.length
                     ) {
                         return;
                     }

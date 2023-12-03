@@ -105,9 +105,11 @@ describe('defenseBoards', () => {
     });
     test('Attempts to be adjacent result in a failed placement', () => {
         DefenseBoards.clear();
-        const mockShip1 = ShipFactory(1);
+        const mockShip1 = ShipFactory(3);
+        mockShip1.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip1, 5);
-        const mockShip2 = ShipFactory(1);
+        const mockShip2 = ShipFactory(3);
+        mockShip2.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip2, 6);
         expect(DefenseBoards.player[5]).toBe(mockShip1);
         expect(DefenseBoards.player[6]).toBeFalsy();
