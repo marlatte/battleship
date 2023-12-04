@@ -1,4 +1,5 @@
 import {
+    BoardFactory,
     DefenseBoards,
     OffenseBoards,
     ShipFactory,
@@ -184,10 +185,20 @@ describe('Square()', () => {
 });
 
 describe('BoardFactory(): basics', () => {
-    test.todo('Factory creates a board that returns a positions array');
-    test.todo('board.getPositions() has length 100');
-    test.todo('Board sets up a Square() for each position');
-    test.todo('Board can print values to the console');
+    test('Factory creates a board that returns a positions array', () => {
+        expect(BoardFactory()).toBeTruthy;
+    });
+    test('board.getGrid() has length 100', () => {
+        expect(BoardFactory().getGrid().length).toBe(100);
+    });
+    test('Board sets up a Square() for each position', () => {
+        expect(BoardFactory().getGrid()[0].getValue()).toBe(0);
+        expect(BoardFactory().getGrid()[50].getValue()).toBe(0);
+        expect(BoardFactory().getGrid()[100]).toBeFalsy();
+    });
+    test('Board can return values to be printed to the console', () => {
+        expect(BoardFactory().getGridValues().length).toBe(100);
+    });
 });
 
 describe('BoardFactory(): Pre-game setup', () => {
@@ -203,7 +214,11 @@ describe('BoardFactory(): Pre-game setup', () => {
 });
 
 describe('BoardFactory(): in-game changes', () => {
-    test.todo('Board receives attacks and marks misses appropriately');
+    test('Board receives attacks and marks misses appropriately', () => {
+        const board = BoardFactory();
+        board.receiveAttack(0);
+        expect(board.getGrid()[0].getValue()).toBe(1);
+    });
     test.todo('Board receives attacks and marks hits appropriately');
     test.todo('Board updates afloat id list after attacks');
 });

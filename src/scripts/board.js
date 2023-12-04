@@ -136,4 +136,17 @@ export const Square = () => {
     return { getValue, addShip, attack, checkShipAfloat };
 };
 
-export const BoardFactory = () => {};
+export const BoardFactory = () => {
+    const grid = [];
+    for (let i = 0; i < 100; i += 1) {
+        grid.push(Square());
+    }
+    const getGrid = () => [...grid];
+    const getGridValues = () => grid.map((square) => square.getValue());
+
+    const receiveAttack = (coord) => {
+        grid[coord].attack();
+    };
+
+    return { getGrid, getGridValues, receiveAttack };
+};
