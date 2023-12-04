@@ -36,7 +36,7 @@ export function ShipFactory(length) {
 export const DefenseBoards = (() => {
     const player = {};
     const computer = {};
-    const clear = () => {
+    const resetBoards = () => {
         Object.keys(player).forEach((key) => {
             delete player[key];
         });
@@ -76,11 +76,11 @@ export const DefenseBoards = (() => {
                 ].filter((ship) => !ship.isSunk()).length;
         });
     };
-    clear();
+    resetBoards();
     return {
         player,
         computer,
-        clear,
+        resetBoards,
     };
 })();
 
@@ -88,10 +88,12 @@ export const OffenseBoards = (() => {
     const player = [];
     const computer = [];
 
-    for (let i = 0; i < 100; i += 1) {
-        player[i] = 0;
-        computer[i] = 0;
-    }
+    const resetBoards = () => {
+        for (let i = 0; i < 100; i += 1) {
+            player[i] = 0;
+            computer[i] = 0;
+        }
+    };
 
     [player, computer].forEach((arr) => {
         arr.receiveAttack = (square) => {
@@ -106,5 +108,7 @@ export const OffenseBoards = (() => {
         };
     });
 
-    return { player, computer };
+    resetBoards();
+
+    return { player, computer, resetBoards };
 })();

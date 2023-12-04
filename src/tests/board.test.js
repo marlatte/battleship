@@ -55,7 +55,7 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.player[20]).toBe(mockShip);
     });
     test('A ship of length 5 can be placed horizontally within the grid', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
         const mockShip2 = ShipFactory(5);
         DefenseBoards[currentPlayer].placeShip(mockShip2, 0);
         expect(DefenseBoards.player[4]).toBe(mockShip2);
@@ -75,15 +75,13 @@ describe('defenseBoards', () => {
     test('Attempts to overlap result in a failed placement', () => {
         const mockShip3 = ShipFactory(3);
         const mockShip4 = ShipFactory(4);
-        mockShip3.id = 3;
-        mockShip4.id = 4;
         DefenseBoards[currentPlayer].placeShip(mockShip3, 70);
         DefenseBoards[currentPlayer].placeShip(mockShip4, 70);
-        expect(DefenseBoards.player[72].id).toBe(3);
+        expect(DefenseBoards.player[72].id).toBe(13);
         expect(DefenseBoards.player[73]).toBeFalsy();
     });
     test('Attempts to be adjacent result in a failed placement', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
         const mockShip1 = ShipFactory(3);
         mockShip1.changeVertical();
         DefenseBoards[currentPlayer].placeShip(mockShip1, 5);
@@ -94,7 +92,7 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.player[6]).toBeFalsy();
     });
     test('Board can tell when a ship sinks', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
         const mockShip1 = ShipFactory(2);
         DefenseBoards[currentPlayer].placeShip(mockShip1, 5);
         const mockShip2 = ShipFactory(2);
@@ -107,7 +105,7 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.player.getShipsLeft()).toBe(1);
     });
     test('Board can tell when last ship sunk', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
         const mockShip = ShipFactory(2);
         DefenseBoards[currentPlayer].placeShip(mockShip, 5);
 
@@ -133,7 +131,8 @@ describe('offenseBoards', () => {
         expect(OffenseBoards.player[3]).toBe(1);
     });
     test('Hits get marked on the board', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
+        OffenseBoards.resetBoards();
         const mockShip = ShipFactory(2);
         DefenseBoards.player.placeShip(mockShip, 50);
         OffenseBoards[currentPlayer].receiveAttack(3);
@@ -142,7 +141,7 @@ describe('offenseBoards', () => {
         expect(OffenseBoards.player[50]).toBe(2);
     });
     test('Board checks if ship sunk after each hit', () => {
-        DefenseBoards.clear();
+        DefenseBoards.resetBoards();
         const mockShip = ShipFactory(2);
         DefenseBoards.player.placeShip(mockShip, 50);
         expect(OffenseBoards[currentPlayer].receiveAttack(50)).toBeFalsy();
