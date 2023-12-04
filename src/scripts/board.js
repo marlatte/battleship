@@ -21,13 +21,13 @@ export function ShipFactory(length) {
     };
     const isVertical = () => vertical;
 
-    const isSunk = () => getHealth() < 1;
+    const isAfloat = () => health >= 1;
     return {
         id,
         length,
         getHealth,
         hit,
-        isSunk,
+        isAfloat,
         changeVertical,
         isVertical,
     };
@@ -73,7 +73,7 @@ export const DefenseBoards = (() => {
             obj.getShipsLeft = () =>
                 [
                     ...new Set(Object.values(obj).filter((item) => item.id)),
-                ].filter((ship) => !ship.isSunk()).length;
+                ].filter((ship) => ship.isAfloat()).length;
         });
     };
     resetBoards();
@@ -101,7 +101,7 @@ export const OffenseBoards = (() => {
             if (ship) {
                 ship.hit();
                 arr[square] = 2;
-                return ship.isSunk();
+                return ship.isAfloat();
             }
             arr[square] = 1;
             return undefined;
@@ -112,3 +112,28 @@ export const OffenseBoards = (() => {
 
     return { player, computer, resetBoards };
 })();
+
+export const Square = () => {
+    let value = 0;
+    const getValue = () => value;
+
+    let ship;
+    const addShip = (newShip) => {
+        ship = newShip;
+    };
+
+    const attack = () => {
+        if (ship) {
+            value = 2;
+            ship.hit();
+        } else {
+            value = 1;
+        }
+    };
+
+    const checkShipAfloat = () => ship.isAfloat();
+
+    return { getValue, addShip, attack, checkShipAfloat };
+};
+
+export const BoardFactory = () => {};

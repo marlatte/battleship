@@ -1,4 +1,9 @@
-import { DefenseBoards, OffenseBoards, ShipFactory } from '../scripts/board';
+import {
+    DefenseBoards,
+    OffenseBoards,
+    ShipFactory,
+    Square,
+} from '../scripts/board';
 import { currentPlayer, opponent } from '../scripts';
 
 describe('ShipFactory', () => {
@@ -18,11 +23,15 @@ describe('ShipFactory', () => {
         mockShip.hit();
         expect(mockShip.getHealth()).toBe(2);
     });
+    test('ship starts afloat', () => {
+        const ship = ShipFactory(2);
+        expect(ship.isAfloat()).toBe(true);
+    });
     test('ship can be sunk', () => {
         const ship = ShipFactory(2);
         ship.hit();
         ship.hit();
-        expect(ship.isSunk()).toBe(true);
+        expect(ship.isAfloat()).toBe(false);
     });
 });
 
@@ -77,7 +86,7 @@ describe('defenseBoards', () => {
         const mockShip4 = ShipFactory(4);
         DefenseBoards[currentPlayer].placeShip(mockShip3, 70);
         DefenseBoards[currentPlayer].placeShip(mockShip4, 70);
-        expect(DefenseBoards.player[72].id).toBe(13);
+        expect(DefenseBoards.player[72].id).toBe(14);
         expect(DefenseBoards.player[73]).toBeFalsy();
     });
     test('Attempts to be adjacent result in a failed placement', () => {
@@ -144,7 +153,57 @@ describe('offenseBoards', () => {
         DefenseBoards.resetBoards();
         const mockShip = ShipFactory(2);
         DefenseBoards.player.placeShip(mockShip, 50);
-        expect(OffenseBoards[currentPlayer].receiveAttack(50)).toBeFalsy();
-        expect(OffenseBoards[currentPlayer].receiveAttack(51)).toBeTruthy();
+        expect(OffenseBoards[currentPlayer].receiveAttack(50)).toBeTruthy();
+        expect(OffenseBoards[currentPlayer].receiveAttack(51)).toBeFalsy();
     });
+});
+
+describe('Square()', () => {
+    test('Squares start empty', () => {
+        const testSquare = Square();
+        expect(testSquare.getValue()).toBe(0);
+    });
+    test('Squares register misses as 1', () => {
+        const testSquare = Square();
+        testSquare.attack();
+        expect(testSquare.getValue()).toBe(1);
+    });
+    test('Squares register hits as 2', () => {
+        const testSquare = Square();
+        testSquare.addShip(ShipFactory(1));
+        testSquare.attack();
+        expect(testSquare.getValue()).toBe(2);
+    });
+    test('Squares know whether their ship is sunk', () => {
+        const testSquare = Square();
+        testSquare.addShip(ShipFactory(1));
+        expect(testSquare.checkShipAfloat()).toBe(true);
+        testSquare.attack();
+        expect(testSquare.checkShipAfloat()).toBe(false);
+    });
+});
+
+describe('BoardFactory(): basics', () => {
+    test.todo('Factory creates a board that returns a positions array');
+    test.todo('board.getPositions() has length 100');
+    test.todo('Board sets up a Square() for each position');
+    test.todo('Board can print values to the console');
+});
+
+describe('BoardFactory(): Pre-game setup', () => {
+    test.todo('Board can place a ship of length 1 in a Square');
+    test.todo('Board can place a ship of length 2 horizontally');
+    test.todo('Board can place a ship of length 2 vertically');
+    test.todo('Board will REJECT an illegally placed ship horizontally');
+    test.todo('Board will REJECT an illegally placed ship vertically');
+    test.todo('Board will REJECT attempts to overlap');
+    test.todo('Board will REJECT attempts to be adjacent');
+    test.todo('Board can be reset');
+    test.todo('Board has an afloat id list');
+});
+
+describe('BoardFactory(): in-game changes', () => {
+    test.todo('Board receives attacks and marks misses appropriately');
+    test.todo('Board receives attacks and marks hits appropriately');
+    test.todo('Board updates afloat id list after attacks');
 });
