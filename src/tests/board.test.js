@@ -202,7 +202,12 @@ describe('BoardFactory(): basics', () => {
 });
 
 describe('BoardFactory(): Pre-game setup', () => {
-    test.todo('Board can place a ship of length 1 in a Square');
+    test('Board can place a ship of length 1 in a Square', () => {
+        const board = BoardFactory();
+        expect(board.getGrid()[0].checkShipAfloat()).toBeFalsy();
+        board.placeShip(ShipFactory(1), 0);
+        expect(board.getGrid()[0].checkShipAfloat()).toBeTruthy();
+    });
     test.todo('Board can place a ship of length 2 horizontally');
     test.todo('Board can place a ship of length 2 vertically');
     test.todo('Board will REJECT an illegally placed ship horizontally');

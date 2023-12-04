@@ -131,7 +131,7 @@ export const Square = () => {
         }
     };
 
-    const checkShipAfloat = () => ship.isAfloat();
+    const checkShipAfloat = () => ship?.isAfloat();
 
     return { getValue, addShip, attack, checkShipAfloat };
 };
@@ -144,9 +144,13 @@ export const BoardFactory = () => {
     const getGrid = () => [...grid];
     const getGridValues = () => grid.map((square) => square.getValue());
 
+    const placeShip = (ship, coord) => {
+        grid[coord].addShip(ship);
+    };
+
     const receiveAttack = (coord) => {
         grid[coord].attack();
     };
 
-    return { getGrid, getGridValues, receiveAttack };
+    return { getGrid, getGridValues, placeShip, receiveAttack };
 };
