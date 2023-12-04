@@ -14,7 +14,9 @@ describe('ShipFactory', () => {
         expect(ship.isVertical()).toBe(true);
     });
     test('ship hit reduces health', () => {
-        expect(ShipFactory(3).hit()).toBe(2);
+        const mockShip = ShipFactory(3);
+        mockShip.hit();
+        expect(mockShip.getHealth()).toBe(2);
     });
     test('ship can be sunk', () => {
         const ship = ShipFactory(2);
@@ -91,15 +93,28 @@ describe('defenseBoards', () => {
         expect(DefenseBoards.player[5]).toBe(mockShip1);
         expect(DefenseBoards.player[6]).toBeFalsy();
     });
-    test('Board checks how many ships left', () => {
+    test('Board can tell when a ship sinks', () => {
+        DefenseBoards.clear();
+        const mockShip1 = ShipFactory(2);
+        DefenseBoards[currentPlayer].placeShip(mockShip1, 5);
+        const mockShip2 = ShipFactory(2);
+        DefenseBoards[currentPlayer].placeShip(mockShip2, 50);
+
+        OffenseBoards[currentPlayer].receiveAttack(5);
+        expect(DefenseBoards.player.getShipsLeft()).toBe(2);
+
+        OffenseBoards[currentPlayer].receiveAttack(6);
+        expect(DefenseBoards.player.getShipsLeft()).toBe(1);
+    });
+    test('Board can tell when last ship sunk', () => {
         DefenseBoards.clear();
         const mockShip = ShipFactory(2);
         DefenseBoards[currentPlayer].placeShip(mockShip, 5);
+
         OffenseBoards[currentPlayer].receiveAttack(5);
         expect(DefenseBoards.player.getShipsLeft()).toBe(1);
+
         OffenseBoards[currentPlayer].receiveAttack(6);
-        console.log(DefenseBoards);
-        console.log(mockShip);
         expect(DefenseBoards.player.getShipsLeft()).toBe(0);
     });
 });

@@ -1,14 +1,19 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable no-plusplus */
+
 import { currentPlayer } from '.';
 
 let counter = 0;
 
 export function ShipFactory(length) {
-    const id = ++counter;
+    counter += 1;
+    const id = counter;
 
     let health = length;
-    const hit = () => --health;
+    const hit = () => {
+        health -= 1;
+    };
+
+    const getHealth = () => health;
 
     let vertical = false;
     const changeVertical = () => {
@@ -16,8 +21,16 @@ export function ShipFactory(length) {
     };
     const isVertical = () => vertical;
 
-    const isSunk = () => health < 1;
-    return { id, length, health, hit, isSunk, changeVertical, isVertical };
+    const isSunk = () => getHealth() < 1;
+    return {
+        id,
+        length,
+        getHealth,
+        hit,
+        isSunk,
+        changeVertical,
+        isVertical,
+    };
 }
 
 export const DefenseBoards = (() => {
@@ -57,14 +70,10 @@ export const DefenseBoards = (() => {
                     obj[i] = ship;
                 });
             };
-            obj.getShipsLeft = () => {
-                const ships = [
+            obj.getShipsLeft = () =>
+                [
                     ...new Set(Object.values(obj).filter((item) => item.id)),
-                ];
-                ships.map((ship) => !ship.isSunk());
-                console.log(ships);
-                return ships.length;
-            };
+                ].filter((ship) => !ship.isSunk()).length;
         });
     };
     clear();
@@ -79,7 +88,7 @@ export const OffenseBoards = (() => {
     const player = [];
     const computer = [];
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i += 1) {
         player[i] = 0;
         computer[i] = 0;
     }
