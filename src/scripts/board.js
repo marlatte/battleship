@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 let counter = 0;
 
 export function ShipFactory(length) {
