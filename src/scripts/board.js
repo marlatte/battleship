@@ -117,7 +117,8 @@ export const Square = () => {
     let value = 0;
     const getValue = () => value;
 
-    let ship;
+    let ship = null;
+    const isTaken = () => !!ship;
     const addShip = (newShip) => {
         ship = newShip;
     };
@@ -133,7 +134,7 @@ export const Square = () => {
 
     const checkShipAfloat = () => ship?.isAfloat();
 
-    return { getValue, addShip, attack, checkShipAfloat };
+    return { getValue, isTaken, addShip, attack, checkShipAfloat };
 };
 
 export const BoardFactory = () => {
@@ -143,14 +144,40 @@ export const BoardFactory = () => {
     }
     const getGrid = () => [...grid];
     const getGridValues = () => grid.map((square) => square.getValue());
+    const getShipPositions = () => grid.map((square) => +square.isTaken());
 
-    const placeShip = (ship, coord) => {
-        grid[coord].addShip(ship);
+    const placeShip = (ship, start) => {
+        const spots = [];
+        const multiplier = ship.isVertical() ? 10 : 1;
+        const end = start + multiplier * ship.length;
+        for (let i = start; i < end; i += multiplier) {
+            const vertBool = i > 100;
+            const horizBool = !(i % 10) || vertBool;
+            const overlapAdj = [0, -1, 1, -10, 10]
+                .map((num) => grid[i + num]?.isTaken())
+                .filter(Boolean);
+            if (
+                (ship.isVertical() ? vertBool : horizBool && i !== start) ||
+                overlapAdj.length
+            ) {
+                return;
+            }
+            spots.push(i);
+        }
+        spots.forEach((i) => {
+            grid[i].addShip(ship);
+        });
     };
 
     const receiveAttack = (coord) => {
         grid[coord].attack();
     };
 
-    return { getGrid, getGridValues, placeShip, receiveAttack };
+    return {
+        getGrid,
+        getGridValues,
+        getShipPositions,
+        placeShip,
+        receiveAttack,
+    };
 };

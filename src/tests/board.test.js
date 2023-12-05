@@ -208,14 +208,57 @@ describe('BoardFactory(): Pre-game setup', () => {
         board.placeShip(ShipFactory(1), 0);
         expect(board.getGrid()[0].checkShipAfloat()).toBeTruthy();
     });
-    test.todo('Board can place a ship of length 2 horizontally');
-    test.todo('Board can place a ship of length 2 vertically');
-    test.todo('Board will REJECT an illegally placed ship horizontally');
-    test.todo('Board will REJECT an illegally placed ship vertically');
-    test.todo('Board will REJECT attempts to overlap');
-    test.todo('Board will REJECT attempts to be adjacent');
-    test.todo('Board can be reset');
-    test.todo('Board has an afloat id list');
+    test('Board can place a ship of length 2 horizontally', () => {
+        const board = BoardFactory();
+        expect(board.getGrid()[0].checkShipAfloat()).toBeFalsy();
+        board.placeShip(ShipFactory(2), 0);
+        expect(board.getGrid()[0].checkShipAfloat()).toBeTruthy();
+        expect(board.getGrid()[1].checkShipAfloat()).toBeTruthy();
+    });
+    test('Board can place a ship of length 2 vertically', () => {
+        const board = BoardFactory();
+        const mockShip = ShipFactory(2);
+        mockShip.changeVertical();
+        expect(board.getGrid()[0].checkShipAfloat()).toBeFalsy();
+        board.placeShip(mockShip, 0);
+        expect(board.getGrid()[0].checkShipAfloat()).toBeTruthy();
+        expect(board.getGrid()[10].checkShipAfloat()).toBeTruthy();
+    });
+    test('Board will REJECT a horizontal ship placed illegally across 2 rows', () => {
+        const board = BoardFactory();
+        board.placeShip(ShipFactory(2), 0);
+        expect(board.getGrid()[9].checkShipAfloat()).toBeFalsy();
+        expect(board.getGrid()[10].checkShipAfloat()).toBeFalsy();
+    });
+    test('Board will REJECT a vertical ship placed illegally beyond the bounds', () => {
+        const board = BoardFactory();
+        const mockShip = ShipFactory(2);
+        mockShip.changeVertical();
+        board.placeShip(mockShip, 95);
+        expect(board.getGrid()[95].checkShipAfloat()).toBeFalsy();
+    });
+    test('Board will REJECT attempts to overlap', () => {
+        const board = BoardFactory();
+        const mockShip1 = ShipFactory(3);
+        const mockShip2 = ShipFactory(4);
+        board.placeShip(mockShip1, 70);
+        board.placeShip(mockShip2, 70);
+        expect(board.getGrid()[72].isTaken()).toBeTruthy();
+        expect(board.getGrid()[73].isTaken()).toBeFalsy();
+    });
+    test('Board will REJECT attempts to be adjacent', () => {
+        const board = BoardFactory();
+        const mockShip3 = ShipFactory(3);
+        const mockShip4 = ShipFactory(4);
+        mockShip3.changeVertical();
+        mockShip4.changeVertical();
+        board.placeShip(mockShip3, 40);
+        board.placeShip(mockShip4, 41);
+        expect(board.getGrid()[40].isTaken()).toBeTruthy();
+        expect(board.getGrid()[41].isTaken()).toBeFalsy();
+    });
+    test.skip('Board can be reset', () => {});
+    test.skip('Board has an afloat id list', () => {});
 });
 
 describe('BoardFactory(): in-game changes', () => {
