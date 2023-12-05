@@ -1,9 +1,4 @@
-let counter = 0;
-
-export function ShipFactory(length) {
-    counter += 1;
-    const id = counter;
-
+export function ShipFactory(id, length) {
     let health = length;
     const hit = () => {
         health -= 1;
@@ -19,7 +14,7 @@ export function ShipFactory(length) {
 
     const isAfloat = () => health >= 1;
     return {
-        id,
+        getID: () => id,
         length,
         getHealth,
         hit,
@@ -50,7 +45,7 @@ export const Square = () => {
 
     const checkShipAfloat = () => ship?.isAfloat();
 
-    const getShipId = () => ship.id;
+    const getShipId = () => ship.getID();
 
     return {
         wasAttacked,

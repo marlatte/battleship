@@ -4,7 +4,7 @@ describe('ShipFactory', () => {
     let mockShip;
 
     beforeEach(() => {
-        mockShip = ShipFactory(3);
+        mockShip = ShipFactory('mockShip', 3);
     });
 
     test('ship exists', () => {
@@ -52,7 +52,7 @@ describe('Square()', () => {
         expect(testSquare.wasAttacked()).toBe(2);
     });
     test('Squares know whether their ship is sunk', () => {
-        testSquare.addShip(ShipFactory(1));
+        testSquare.addShip(ShipFactory('test', 1));
         expect(testSquare.checkShipAfloat()).toBe(true);
         testSquare.attack();
         expect(testSquare.checkShipAfloat()).toBe(false);
@@ -66,8 +66,8 @@ describe('BoardFactory()', () => {
 
     beforeEach(() => {
         board = BoardFactory();
-        mockShip1 = ShipFactory(3);
-        mockShip2 = ShipFactory(4);
+        mockShip1 = ShipFactory('test', 3);
+        mockShip2 = ShipFactory('test', 4);
     });
 
     describe('Basics', () => {
@@ -90,7 +90,7 @@ describe('BoardFactory()', () => {
     describe('Pre-game setup', () => {
         test('Board can place a ship of length 1 in a Square', () => {
             expect(board.getGrid()[0].checkShipAfloat()).toBeFalsy();
-            board.placeShip(ShipFactory(1), 0);
+            board.placeShip(ShipFactory('test', 1), 0);
             expect(board.getGrid()[0].checkShipAfloat()).toBeTruthy();
         });
         test('Board can place a ship of length 3 horizontally', () => {
@@ -131,8 +131,8 @@ describe('BoardFactory()', () => {
             expect(board.getGrid()[41].isTaken()).toBeFalsy();
         });
         test('Board has an afloat id list', () => {
-            board.placeShip(ShipFactory(1), 0);
-            board.placeShip(ShipFactory(1), 3);
+            board.placeShip(ShipFactory('test 1', 1), 0);
+            board.placeShip(ShipFactory('test 2', 1), 3);
             expect(board.getShipsAfloat().length).toBe(2);
         });
     });
@@ -143,12 +143,12 @@ describe('BoardFactory()', () => {
             expect(board.getGrid()[0].wasAttacked()).toBe(1);
         });
         test('Board receives attacks and marks hits appropriately', () => {
-            board.placeShip(ShipFactory(2), 0);
+            board.placeShip(ShipFactory('test', 2), 0);
             board.receiveAttack(0);
             expect(board.getGrid()[0].wasAttacked()).toBe(2);
         });
         test('Board updates afloat id list after attacks', () => {
-            board.placeShip(ShipFactory(2), 0);
+            board.placeShip(ShipFactory('test', 2), 0);
             board.receiveAttack(0);
             expect(board.getShipsAfloat().length).toBe(1);
         });
