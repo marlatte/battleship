@@ -31,7 +31,7 @@ export const Player = (() => {
 
 export const newGame = () => {
     Player.reset();
-    // console.log('---------- \n New Game \n----------');
+    console.log('---------- \n New Game \n----------');
 
     const player = BoardFactory();
     // const computer = BoardFactory();
@@ -46,5 +46,5 @@ export const newGame = () => {
     ];
 
     player.placeShip(shipTypes[0], 0);
-    player.getGridShips();
+    console.log(player.getGridShips());
 };

@@ -1,2 +1,1 @@
-const [currentPlayer, opponent] = ['player', 'computer'];
-export { currentPlayer, opponent };
+import { Player } from './game-controller';
