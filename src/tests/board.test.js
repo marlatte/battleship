@@ -162,18 +162,18 @@ describe('offenseBoards', () => {
 describe('Square()', () => {
     test('Squares start empty', () => {
         const testSquare = Square();
-        expect(testSquare.getValue()).toBe(0);
+        expect(testSquare.wasAttacked()).toBe(0);
     });
     test('Squares register misses as 1', () => {
         const testSquare = Square();
         testSquare.attack();
-        expect(testSquare.getValue()).toBe(1);
+        expect(testSquare.wasAttacked()).toBe(1);
     });
     test('Squares register hits as 2', () => {
         const testSquare = Square();
         testSquare.addShip(ShipFactory(1));
         testSquare.attack();
-        expect(testSquare.getValue()).toBe(2);
+        expect(testSquare.wasAttacked()).toBe(2);
     });
     test('Squares know whether their ship is sunk', () => {
         const testSquare = Square();
@@ -192,12 +192,12 @@ describe('BoardFactory(): basics', () => {
         expect(BoardFactory().getGrid().length).toBe(100);
     });
     test('Board sets up a Square() for each position', () => {
-        expect(BoardFactory().getGrid()[0].getValue()).toBe(0);
-        expect(BoardFactory().getGrid()[50].getValue()).toBe(0);
+        expect(BoardFactory().getGrid()[0].wasAttacked()).toBe(0);
+        expect(BoardFactory().getGrid()[50].wasAttacked()).toBe(0);
         expect(BoardFactory().getGrid()[100]).toBeFalsy();
     });
     test('Board can return values to be printed to the console', () => {
-        expect(BoardFactory().getGridValues().length).toBe(100);
+        expect(BoardFactory().getGridAttacks().length).toBe(100);
     });
 });
 
@@ -257,16 +257,36 @@ describe('BoardFactory(): Pre-game setup', () => {
         expect(board.getGrid()[40].isTaken()).toBeTruthy();
         expect(board.getGrid()[41].isTaken()).toBeFalsy();
     });
-    test.skip('Board can be reset', () => {});
-    test.skip('Board has an afloat id list', () => {});
+    test('Board has an afloat id list', () => {
+        const board = BoardFactory();
+        board.placeShip(ShipFactory(1), 0);
+        board.placeShip(ShipFactory(1), 3);
+        expect(board.getShipsAfloat().length).toBe(2);
+    });
 });
 
 describe('BoardFactory(): in-game changes', () => {
     test('Board receives attacks and marks misses appropriately', () => {
         const board = BoardFactory();
         board.receiveAttack(0);
-        expect(board.getGrid()[0].getValue()).toBe(1);
+        expect(board.getGrid()[0].wasAttacked()).toBe(1);
     });
-    test.todo('Board receives attacks and marks hits appropriately');
-    test.todo('Board updates afloat id list after attacks');
+    test('Board receives attacks and marks hits appropriately', () => {
+        const board = BoardFactory();
+        board.placeShip(ShipFactory(2), 0);
+        board.receiveAttack(0);
+        expect(board.getGrid()[0].wasAttacked()).toBe(2);
+    });
+    test('Board updates afloat id list after attacks', () => {
+        const board = BoardFactory();
+        board.placeShip(ShipFactory(2), 0);
+        board.receiveAttack(0);
+        expect(board.getShipsAfloat().length).toBe(1);
+    });
+    test('Board updates afloat id list after sinks', () => {
+        const board = BoardFactory();
+        board.placeShip(ShipFactory(1), 0);
+        board.receiveAttack(0);
+        expect(board.getShipsAfloat().length).toBe(0);
+    });
 });

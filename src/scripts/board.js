@@ -114,8 +114,8 @@ export const OffenseBoards = (() => {
 })();
 
 export const Square = () => {
-    let value = 0;
-    const getValue = () => value;
+    let attacked = 0;
+    const wasAttacked = () => attacked;
 
     let ship = null;
     const isTaken = () => !!ship;
@@ -125,16 +125,25 @@ export const Square = () => {
 
     const attack = () => {
         if (ship) {
-            value = 2;
+            attacked = 2;
             ship.hit();
         } else {
-            value = 1;
+            attacked = 1;
         }
     };
 
     const checkShipAfloat = () => ship?.isAfloat();
 
-    return { getValue, isTaken, addShip, attack, checkShipAfloat };
+    const getShipId = () => ship.id;
+
+    return {
+        wasAttacked,
+        isTaken,
+        addShip,
+        attack,
+        checkShipAfloat,
+        getShipId,
+    };
 };
 
 export const BoardFactory = () => {
@@ -143,8 +152,18 @@ export const BoardFactory = () => {
         grid.push(Square());
     }
     const getGrid = () => [...grid];
-    const getGridValues = () => grid.map((square) => square.getValue());
-    const getShipPositions = () => grid.map((square) => +square.isTaken());
+    const getGridAttacks = () => grid.map((square) => square.wasAttacked());
+    const getGridShips = () => grid.map((square) => +square.isTaken());
+
+    const shipsAfloat = new Set();
+    const updateShipsAfloat = () => {
+        shipsAfloat.clear();
+        const ships = grid.filter((sq) => sq.checkShipAfloat());
+        ships.forEach((item) => {
+            shipsAfloat.add(item.getShipId());
+        });
+    };
+    const getShipsAfloat = () => [...shipsAfloat];
 
     const placeShip = (ship, start) => {
         const spots = [];
@@ -167,17 +186,20 @@ export const BoardFactory = () => {
         spots.forEach((i) => {
             grid[i].addShip(ship);
         });
+        updateShipsAfloat();
     };
 
     const receiveAttack = (coord) => {
         grid[coord].attack();
+        updateShipsAfloat();
     };
 
     return {
         getGrid,
-        getGridValues,
-        getShipPositions,
+        getGridAttacks,
+        getGridShips,
         placeShip,
+        getShipsAfloat,
         receiveAttack,
     };
 };
