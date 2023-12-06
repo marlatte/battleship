@@ -32,16 +32,16 @@ const TestButtons = (() => {
     });
 })();
 
-const boardsSection = document.querySelector('section.boards');
+const boardsContainer = document.querySelector('.boards .container');
 
 function updateBoards(
     playerShipsGrid = [],
     playerAttacksGrid = [],
     compAttacksGrid = []
 ) {
-    boardsSection.textContent = '';
-    const shipsBoard = elFactory('div', { classList: 'board ships' }, []);
-    const attacksBoard = elFactory('div', { classList: 'board attacks' }, []);
+    boardsContainer.textContent = '';
+    const shipsBoard = elFactory('div', { classList: 'board ships' });
+    const attacksBoard = elFactory('div', { classList: 'board attacks' });
 
     for (let i = 0; i < 100; i += 1) {
         const taken = playerShipsGrid[i] ? ' ship' : '';
@@ -62,12 +62,8 @@ function updateBoards(
         );
     }
 
-    const container = elFactory('div', { classList: 'container' }, [
-        shipsBoard,
-        attacksBoard,
-    ]);
-
-    boardsSection.appendChild(htmlFactory(container));
+    boardsContainer.appendChild(htmlFactory(shipsBoard));
+    boardsContainer.appendChild(htmlFactory(attacksBoard));
 }
 
 updateBoards();
