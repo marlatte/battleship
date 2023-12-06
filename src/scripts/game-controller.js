@@ -32,58 +32,68 @@ export const Player = (() => {
 })();
 
 export const Game = (() => {
-    let player;
-    let comp;
+    const boards = {
+        player: {},
+        comp: {},
+        reset: () => {
+            boards.player = BoardFactory();
+            boards.comp = BoardFactory();
+        },
+    };
 
-    const playerShips = [
-        ShipFactory('carrier', 5),
-        ShipFactory('battleship', 4),
-        ShipFactory('destroyer', 3),
-        ShipFactory('submarine', 3),
-        ShipFactory('patrol 1', 2),
-        ShipFactory('patrol 2', 2),
-    ];
-    const compShips = [
-        ShipFactory('carrier', 5),
-        ShipFactory('battleship', 4),
-        ShipFactory('destroyer', 3),
-        ShipFactory('submarine', 3),
-        ShipFactory('patrol 1', 2),
-        ShipFactory('patrol 2', 2),
-    ];
+    const ships = {
+        p: {},
+        c: {},
+        reset: () => {
+            [
+                ['carrier', 5],
+                ['battleship', 4],
+                ['destroyer', 3],
+                ['submarine', 3],
+                ['patrol1', 2],
+                ['patrol2', 2],
+            ].forEach(([name, len]) => {
+                ships.p[name] = ShipFactory(name, len);
+                ships.c[name] = ShipFactory(name, len);
+            });
+        },
+    };
+    ships.reset();
 
     function publishUpdate() {
         PubSub.publish(
             E.TEST.UPDATE,
-            player.getGridShips(),
-            player.getGridAttacks(),
-            comp.getGridAttacks()
+            boards.player.getGridShips(),
+            boards.player.getGridAttacks(),
+            boards.comp.getGridAttacks()
         );
     }
 
-    function playRound(coord) {
+    function attack(coord) {
         if (Player.isHumanTurn()) {
-            comp.receiveAttack(coord);
+            boards.comp.receiveAttack(coord);
         } else {
-            player.receiveAttack(coord);
+            boards.player.receiveAttack(coord);
         }
+    }
 
+    function playRound(coord) {
+        attack(coord);
         publishUpdate();
+        Player.toggle();
     }
 
     function reset() {
-        console.log('---------- \n New Game \n----------');
-
         Player.reset();
-        player = BoardFactory();
-        comp = BoardFactory();
+        boards.reset();
     }
 
     // Temporary!!!
     function testShipPlacement() {
         reset();
-        player.placeShip(playerShips[0], 0);
-        comp.placeShip(compShips[4], 3);
+        boards.player.placeShip(ships.p.carrier, 54);
+        ships.p.battleship.changeVertical();
+        boards.player.placeShip(ships.p.battleship, 12);
 
         publishUpdate();
     }
