@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Game, Player } from './game-controller';
 import '../styles/style.css';
 import { elFactory, htmlFactory } from './helpers';
@@ -28,11 +29,17 @@ const TestButtons = (() => {
     compMiss.addEventListener('click', () => {
         Player.reset();
         Player.toggle();
-        Game.playRound(7);
+        PubSub.publish(E.TEST.FIRE, 7);
     });
 })();
 
 const boardsContainer = document.querySelector('.boards .container');
+
+function handlePlayerAttack(e) {
+    const coord = e.target.dataset.attackCoord;
+    if (!coord) return;
+    PubSub.publish(E.TEST.FIRE, coord);
+}
 
 function updateBoards(
     playerShipsGrid = [],
@@ -48,22 +55,28 @@ function updateBoards(
         const compAttack = ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
         shipsBoard.children.push(
             elFactory('div', {
+                textContent: i, // devMode
                 classList: `square${taken}${compAttack}`,
-                dataset: { coord: `ship-${i}` },
+                dataset: { shipCoord: i },
             })
         );
 
         const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
         attacksBoard.children.push(
             elFactory('button', {
+                textContent: i, // devMode
                 classList: `square${playerAttack}`,
-                dataset: { coord: `attack-${i}` },
+                dataset: { attackCoord: i },
             })
         );
     }
 
     boardsContainer.appendChild(htmlFactory(shipsBoard));
     boardsContainer.appendChild(htmlFactory(attacksBoard));
+
+    document
+        .querySelector('.board.attacks')
+        .addEventListener('click', handlePlayerAttack);
 }
 
 updateBoards();
