@@ -83,7 +83,7 @@ export const BoardFactory = () => {
         for (let i = start; i < end; i += multiplier) {
             const vertBool = i > 100;
             const horizBool = !(i % 10) || vertBool;
-            const overlapAdj = [0, -1, 1, -10, 10]
+            const overlapAdj = [0, -1, 1, 9, -9, -10, 10, 11, -11]
                 .map((num) => grid[i + num]?.isTaken())
                 .filter(Boolean);
             if (

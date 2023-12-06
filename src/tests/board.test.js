@@ -126,9 +126,9 @@ describe('BoardFactory()', () => {
             mockShip1.changeVertical();
             mockShip2.changeVertical();
             board.placeShip(mockShip1, 40);
-            board.placeShip(mockShip2, 41);
+            board.placeShip(mockShip2, 1);
             expect(board.getGrid()[40].isTaken()).toBeTruthy();
-            expect(board.getGrid()[41].isTaken()).toBeFalsy();
+            expect(board.getGrid()[31].isTaken()).toBeFalsy();
         });
         test('Board has an afloat id list', () => {
             board.placeShip(ShipFactory('test 1', 1), 0);
