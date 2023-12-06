@@ -58,13 +58,25 @@ main {
     background-color: #fff;
 }
 
-button.square {
+.square {
     background-color: skyblue;
     border: none;
 }
 
-.attacks button.square {
+button.square {
     cursor: pointer;
+}
+
+.square.ship {
+    background-color: navy;
+}
+
+.square.hit {
+    background-color: red;
+}
+
+.square.miss {
+    background-color: yellow;
 }
 
 @media (min-width: 700px) {
