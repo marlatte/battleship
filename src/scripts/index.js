@@ -16,7 +16,7 @@ const TestButtons = (() => {
     const playerMiss = document.querySelector('#player-miss');
     playerMiss.addEventListener('click', () => {
         Player.reset();
-        PubSub.publish(E.TEST.FIRE, 2);
+        PubSub.publish(E.TEST.FIRE, 12);
     });
 
     const compHits = document.querySelector('#comp-hits');

@@ -48,6 +48,7 @@ export const Game = (() => {
             [
                 ['carrier', 5],
                 ['battleship', 4],
+                ['cruiser', 4],
                 ['destroyer', 3],
                 ['submarine', 3],
                 ['patrol1', 2],
@@ -86,14 +87,33 @@ export const Game = (() => {
     function reset() {
         Player.reset();
         boards.reset();
+        ships.reset();
     }
 
-    // Temporary!!!
+    // devMode
     function testShipPlacement() {
         reset();
-        boards.player.placeShip(ships.p.carrier, 54);
+
+        // Player ships
+        boards.player.placeShip(ships.p.carrier, 0);
         ships.p.battleship.changeVertical();
-        boards.player.placeShip(ships.p.battleship, 12);
+        boards.player.placeShip(ships.p.battleship, 22);
+        boards.player.placeShip(ships.p.cruiser, 45);
+        boards.player.placeShip(ships.p.destroyer, 94);
+        boards.player.placeShip(ships.p.submarine, 67);
+        boards.player.placeShip(ships.p.patrol1, 17);
+        ships.p.patrol2.changeVertical();
+        boards.player.placeShip(ships.p.patrol2, 81);
+
+        // Computer ships
+        boards.comp.placeShip(ships.c.carrier, 0);
+        ships.c.battleship.changeVertical();
+        boards.comp.placeShip(ships.c.battleship, 22);
+        boards.comp.placeShip(ships.c.destroyer, 94);
+        boards.comp.placeShip(ships.c.submarine, 67);
+        boards.comp.placeShip(ships.c.patrol1, 17);
+        ships.c.patrol2.changeVertical();
+        boards.comp.placeShip(ships.c.patrol2, 81);
 
         publishUpdate();
     }
