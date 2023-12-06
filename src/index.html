@@ -7,20 +7,28 @@
     </head>
 
     <body>
-        <header></header>
+        <header><h1>Battleship</h1></header>
         <main>
-            <section>
-                <button type="button" id="start-btn">Start Game</button>
+            <section class="buttons">
+                <div class="starter">
+                    <button id="start-btn">Start Game</button>
+                </div>
+                <div class="player-attacks">
+                    <button id="player-hits">Player hits Comp</button>
+                    <button id="player-miss">Player miss Comp</button>
+                </div>
+                <div class="comp-attacks">
+                    <button id="comp-hits">Comp hits Player</button>
+                    <button id="comp-miss">Comp miss Player</button>
+                </div>
             </section>
-            <section>
-                <button type="button" id="player-hits">Player hits Comp</button>
-                <button type="button" id="player-miss">Player miss Comp</button>
-            </section>
-            <section>
-                <button type="button" id="comp-hits">Comp hits Player</button>
-                <button type="button" id="comp-miss">Comp miss Player</button>
+            <section class="boards">
+                <div class="container">
+                    <div class="board ships"></div>
+                    <div class="board attacks"></div>
+                </div>
             </section>
         </main>
-        <footer></footer>
+        <footer>Marlatte</footer>
     </body>
 </html>

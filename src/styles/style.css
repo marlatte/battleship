@@ -3,17 +3,23 @@
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  /* color: unset; */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* color: unset; */
 }
 
 /* ---------------     /Reboot     --------------- */
 /* ---------------     Utilities & Universals     --------------- */
 
 :root {
-  --eg-var: red;
+    --eg-var: red;
+}
+
+body {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ---------------     /Utilities & Universals     --------------- */
@@ -23,11 +29,33 @@
 /* ---------------     /Header     --------------- */
 
 /* ---------------     Main     --------------- */
-/* ---------------     Section     --------------- */
-/* ---------------     /Section     --------------- */
+main {
+    flex: 1;
+}
+/* ---------------     Boards     --------------- */
+.boards {
+    display: grid;
+    place-content: center;
+}
+
+.container {
+    padding: 20px;
+    background-color: grey;
+}
+
+.board {
+    background-color: #fff;
+}
+/* ---------------     /Boards     --------------- */
 /* ---------------     /Main     --------------- */
 
 /* ---------------     Footer     --------------- */
+
+footer {
+    margin-top: auto;
+    margin-bottom: 10px;
+    text-align: center;
+}
 /* ---------------     /Footer     --------------- */
 
 /* ---------------     /CONTENT     --------------- */
