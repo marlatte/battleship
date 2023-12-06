@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { BoardFactory, ShipFactory } from './board';
+import { E, PubSub } from './pubsub';
 
 export const Player = (() => {
     let human = true;
@@ -50,38 +52,23 @@ export const Game = (() => {
         ShipFactory('patrol 2', 2),
     ];
 
-    function showPlayerLocations() {
-        console.log('Player Locations;');
-        console.log(player.getGridShips());
-    }
-
-    function showCompLocations() {
-        console.log('Computer Locations;');
-        console.log(comp.getGridShips());
-    }
-
-    function showPlayerAttacks() {
-        console.log('Player Attacks;');
-        console.log(comp.getGridAttacks());
-    }
-
-    function showCompAttacks() {
-        console.log('Computer Attacks;');
-        console.log(player.getGridAttacks());
+    function publishUpdate() {
+        PubSub.publish(
+            E.TEST.UPDATE,
+            player.getGridShips(),
+            player.getGridAttacks(),
+            comp.getGridAttacks()
+        );
     }
 
     function playRound(coord) {
-        showPlayerLocations();
-        showCompLocations();
-
         if (Player.isHumanTurn()) {
             comp.receiveAttack(coord);
         } else {
             player.receiveAttack(coord);
         }
 
-        showPlayerAttacks();
-        showCompAttacks();
+        publishUpdate();
     }
 
     function reset() {
@@ -90,13 +77,20 @@ export const Game = (() => {
         Player.reset();
         player = BoardFactory();
         comp = BoardFactory();
+    }
 
-        // Temporary!!!
+    // Temporary!!!
+    function testShipPlacement() {
+        reset();
         player.placeShip(playerShips[0], 0);
         comp.placeShip(compShips[4], 3);
+
+        publishUpdate();
     }
 
     reset();
 
-    return { reset, playRound };
+    return { reset, playRound, testShipPlacement };
 })();
+
+const testShot = PubSub.subscribe(E.TEST.FIRE, Game.playRound);

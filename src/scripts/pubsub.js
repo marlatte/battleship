@@ -31,4 +31,10 @@ export const PubSub = (() => {
     return { subscribe, publish };
 })();
 
-export const E = {};
+export const E = {
+    TEST: {
+        START: 'StartGame',
+        UPDATE: 'UpdateGrids',
+        FIRE: 'PlayerFire',
+    },
+};

@@ -1,27 +1,28 @@
 import { Game, Player } from './game-controller';
 import '../styles/style.css';
 import { elFactory, htmlFactory } from './helpers';
+import { E, PubSub } from './pubsub';
 
 const TestButtons = (() => {
     const startBtn = document.querySelector('#start-btn');
-    startBtn.addEventListener('click', Game.reset);
+    startBtn.addEventListener('click', Game.testShipPlacement);
 
     const playerHits = document.querySelector('#player-hits');
     playerHits.addEventListener('click', () => {
         Player.reset();
-        Game.playRound(3);
+        PubSub.publish(E.TEST.FIRE, 3);
     });
     const playerMiss = document.querySelector('#player-miss');
     playerMiss.addEventListener('click', () => {
         Player.reset();
-        Game.playRound(2);
+        PubSub.publish(E.TEST.FIRE, 2);
     });
 
     const compHits = document.querySelector('#comp-hits');
     compHits.addEventListener('click', () => {
         Player.reset();
         Player.toggle();
-        Game.playRound(0);
+        PubSub.publish(E.TEST.FIRE, 0);
     });
     const compMiss = document.querySelector('#comp-miss');
     compMiss.addEventListener('click', () => {
@@ -33,20 +34,29 @@ const TestButtons = (() => {
 
 const boardsSection = document.querySelector('section.boards');
 
-function buildBoards() {
+function updateBoards(
+    playerShipsGrid = [],
+    playerAttacksGrid = [],
+    compAttacksGrid = []
+) {
+    boardsSection.textContent = '';
     const shipsBoard = elFactory('div', { classList: 'board ships' }, []);
     const attacksBoard = elFactory('div', { classList: 'board attacks' }, []);
 
     for (let i = 0; i < 100; i += 1) {
+        const taken = playerShipsGrid[i] ? ' ship' : '';
+        const compAttack = ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
         shipsBoard.children.push(
-            elFactory('button', {
-                classList: 'square',
+            elFactory('div', {
+                classList: `square${taken}${compAttack}`,
                 dataset: { coord: `ship-${i}` },
             })
         );
+
+        const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
         attacksBoard.children.push(
             elFactory('button', {
-                classList: 'square',
+                classList: `square${playerAttack}`,
                 dataset: { coord: `attack-${i}` },
             })
         );
@@ -56,7 +66,10 @@ function buildBoards() {
         shipsBoard,
         attacksBoard,
     ]);
+
     boardsSection.appendChild(htmlFactory(container));
 }
 
-buildBoards();
+updateBoards();
+
+const testUpdate = PubSub.subscribe(E.TEST.UPDATE, updateBoards);
