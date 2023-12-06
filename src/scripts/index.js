@@ -1,1 +1,28 @@
-import { Player } from './game-controller';
+import { Game, Player } from './game-controller';
+
+const startBtn = document.querySelector('#start-btn');
+startBtn.addEventListener('click', Game.reset);
+
+const playerHits = document.querySelector('#player-hits');
+playerHits.addEventListener('click', () => {
+    Player.reset();
+    Game.playRound(3);
+});
+const playerMiss = document.querySelector('#player-miss');
+playerMiss.addEventListener('click', () => {
+    Player.reset();
+    Game.playRound(2);
+});
+
+const compHits = document.querySelector('#comp-hits');
+compHits.addEventListener('click', () => {
+    Player.reset();
+    Player.toggle();
+    Game.playRound(0);
+});
+const compMiss = document.querySelector('#comp-miss');
+compMiss.addEventListener('click', () => {
+    Player.reset();
+    Player.toggle();
+    Game.playRound(7);
+});

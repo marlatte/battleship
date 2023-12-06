@@ -29,14 +29,19 @@ export const Player = (() => {
     };
 })();
 
-export const newGame = () => {
-    Player.reset();
-    console.log('---------- \n New Game \n----------');
+export const Game = (() => {
+    let player;
+    let comp;
 
-    const player = BoardFactory();
-    // const computer = BoardFactory();
-
-    const shipTypes = [
+    const playerShips = [
+        ShipFactory('carrier', 5),
+        ShipFactory('battleship', 4),
+        ShipFactory('destroyer', 3),
+        ShipFactory('submarine', 3),
+        ShipFactory('patrol 1', 2),
+        ShipFactory('patrol 2', 2),
+    ];
+    const compShips = [
         ShipFactory('carrier', 5),
         ShipFactory('battleship', 4),
         ShipFactory('destroyer', 3),
@@ -45,6 +50,53 @@ export const newGame = () => {
         ShipFactory('patrol 2', 2),
     ];
 
-    player.placeShip(shipTypes[0], 0);
-    console.log(player.getGridShips());
-};
+    function showPlayerLocations() {
+        console.log('Player Locations;');
+        console.log(player.getGridShips());
+    }
+
+    function showCompLocations() {
+        console.log('Computer Locations;');
+        console.log(comp.getGridShips());
+    }
+
+    function showPlayerAttacks() {
+        console.log('Player Attacks;');
+        console.log(comp.getGridAttacks());
+    }
+
+    function showCompAttacks() {
+        console.log('Computer Attacks;');
+        console.log(player.getGridAttacks());
+    }
+
+    function playRound(coord) {
+        showPlayerLocations();
+        showCompLocations();
+
+        if (Player.isHumanTurn()) {
+            comp.receiveAttack(coord);
+        } else {
+            player.receiveAttack(coord);
+        }
+
+        showPlayerAttacks();
+        showCompAttacks();
+    }
+
+    function reset() {
+        console.log('---------- \n New Game \n----------');
+
+        Player.reset();
+        player = BoardFactory();
+        comp = BoardFactory();
+
+        // Temporary!!!
+        player.placeShip(playerShips[0], 0);
+        comp.placeShip(compShips[4], 3);
+    }
+
+    reset();
+
+    return { reset, playRound };
+})();
