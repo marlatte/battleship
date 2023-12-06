@@ -34,17 +34,47 @@ main {
 }
 /* ---------------     Boards     --------------- */
 .boards {
+    margin-top: 10px;
     display: grid;
     place-content: center;
 }
 
 .container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
     background-color: grey;
 }
 
 .board {
+    --square-dim: 7vw;
+    padding: 3px;
+    display: grid;
+    grid-template-columns: repeat(10, var(--square-dim));
+    grid-template-rows: repeat(10, var(--square-dim));
+    gap: 3px;
     background-color: #fff;
+}
+
+button.square {
+    background-color: skyblue;
+    border: none;
+}
+
+.attacks button.square {
+    cursor: pointer;
+}
+
+@media (min-width: 700px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .board {
+        --square-dim: 4vw;
+    }
 }
 /* ---------------     /Boards     --------------- */
 /* ---------------     /Main     --------------- */
