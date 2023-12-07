@@ -71,10 +71,10 @@ export const BoardFactory = () => {
             if (!(i % 10)) testBase.push(-9, 1, 11);
             else if (!((i + 1) % 10)) testBase.push(-11, -1, 9);
             else testBase.push(-9, 1, 11, -11, -1, 9);
-            const output = testBase
+            const adjacent = testBase
                 .map((num) => grid[i + num]?.isTaken())
-                .filter(Boolean);
-            return +!!output.length;
+                .filter(Boolean).length;
+            return +!!adjacent;
         });
 
     const shipsAfloat = new Set();
@@ -94,12 +94,9 @@ export const BoardFactory = () => {
         for (let i = start; i < end; i += multiplier) {
             const vertBool = i > 100;
             const horizBool = !(i % 10) || vertBool;
-            const overlapAdj = [0, -1, 1, 9, -9, -10, 10, 11, -11]
-                .map((num) => grid[i + num]?.isTaken())
-                .filter(Boolean);
             if (
                 (ship.isVertical() ? vertBool : horizBool && i !== start) ||
-                overlapAdj.length
+                getGridIllegal()[i]
             ) {
                 return;
             }

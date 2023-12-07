@@ -140,19 +140,16 @@ describe('BoardFactory()', () => {
     describe('Pre-game setup: testing illegal spots', () => {
         test('Board can test if a center spot is illegal', () => {
             board.placeShip(mockShip1, 43);
-            console.log(board.getGridIllegal());
             expect(board.getGridIllegal()[42]).toBeTruthy();
             expect(board.getGridIllegal()[41]).toBeFalsy();
         });
         test('Board can test if a left spot is illegal', () => {
             board.placeShip(mockShip1, 40);
-            console.log(board.getGridIllegal());
             expect(board.getGridIllegal()[32]).toBeTruthy();
             expect(board.getGridIllegal()[39]).toBeFalsy();
         });
         test('Board can test if a right spot is illegal', () => {
             board.placeShip(mockShip1, 57);
-            console.log(board.getGridIllegal());
             expect(board.getGridIllegal()[69]).toBeTruthy();
             expect(board.getGridIllegal()[70]).toBeFalsy();
         });
