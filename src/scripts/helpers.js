@@ -31,13 +31,3 @@ export function htmlFactory(obj) {
 
     return el;
 }
-
-// ------------------------------------------------------- //
-// -------------------- Other Helpers -------------------- //
-// ------------------------------------------------------- //
-
-export function findTaskId(target) {
-    return +(target.classList.value.includes('id-bubble-marker')
-        ? target.dataset.taskId
-        : findTaskId(target.parentElement));
-}
