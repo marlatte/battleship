@@ -89,16 +89,17 @@ export const BoardFactory = () => {
 
     const placeShip = (ship, start) => {
         const spots = [];
-        const multiplier = ship.isVertical() ? 10 : 1;
-        const end = start + multiplier * ship.length;
+        const { length, isVertical } = ship;
+        const multiplier = isVertical() ? 10 : 1;
+        const end = start + multiplier * length;
         for (let i = start; i < end; i += multiplier) {
             const vertBool = i > 100;
             const horizBool = !(i % 10) || vertBool;
             if (
-                (ship.isVertical() ? vertBool : horizBool && i !== start) ||
+                (isVertical() ? vertBool : horizBool && i !== start) ||
                 getGridIllegal()[i]
             ) {
-                return;
+                return false;
             }
             spots.push(i);
         }
@@ -106,6 +107,7 @@ export const BoardFactory = () => {
             grid[i].addShip(ship);
         });
         updateShipsAfloat();
+        return true;
     };
 
     const receiveAttack = (coord) => {

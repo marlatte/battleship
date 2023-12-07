@@ -107,13 +107,13 @@ describe('BoardFactory()', () => {
             expect(board.getGrid()[10].checkShipAfloat()).toBeTruthy();
         });
         test('Board will REJECT a horizontal ship placed illegally across 2 rows', () => {
-            board.placeShip(mockShip1, 0);
-            expect(board.getGrid()[9].checkShipAfloat()).toBeFalsy();
-            expect(board.getGrid()[10].checkShipAfloat()).toBeFalsy();
+            expect(board.placeShip(mockShip1, 9)).toBeFalsy();
+            expect(board.getGrid()[9].isTaken()).toBeFalsy();
+            expect(board.getGrid()[10].isTaken()).toBeFalsy();
         });
         test('Board will REJECT a vertical ship placed illegally beyond the bounds', () => {
             mockShip1.changeVertical();
-            board.placeShip(mockShip1, 95);
+            expect(board.placeShip(mockShip1, 95)).toBe(false);
             expect(board.getGrid()[95].isTaken()).toBeFalsy();
         });
         test('Board will REJECT attempts to overlap', () => {
