@@ -65,6 +65,17 @@ export const BoardFactory = () => {
     const getGrid = () => [...grid];
     const getGridAttacks = () => grid.map((square) => square.wasAttacked());
     const getGridShips = () => grid.map((square) => +square.isTaken());
+    const getGridIllegal = () =>
+        grid.map((square, i) => {
+            const testBase = [0, 10, -10];
+            if (!(i % 10)) testBase.push(-9, 1, 11);
+            else if (!((i + 1) % 10)) testBase.push(-11, -1, 9);
+            else testBase.push(-9, 1, 11, -11, -1, 9);
+            const output = testBase
+                .map((num) => grid[i + num]?.isTaken())
+                .filter(Boolean);
+            return +!!output.length;
+        });
 
     const shipsAfloat = new Set();
     const updateShipsAfloat = () => {
@@ -109,6 +120,7 @@ export const BoardFactory = () => {
         getGrid,
         getGridAttacks,
         getGridShips,
+        getGridIllegal,
         placeShip,
         getShipsAfloat,
         receiveAttack,

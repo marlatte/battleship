@@ -87,7 +87,7 @@ describe('BoardFactory()', () => {
         });
     });
 
-    describe('Pre-game setup', () => {
+    describe('Pre-game setup: placing and tracking', () => {
         test('Board can place a ship of length 1 in a Square', () => {
             expect(board.getGrid()[0].checkShipAfloat()).toBeFalsy();
             board.placeShip(ShipFactory('test', 1), 0);
@@ -134,6 +134,27 @@ describe('BoardFactory()', () => {
             board.placeShip(ShipFactory('test 1', 1), 0);
             board.placeShip(ShipFactory('test 2', 1), 3);
             expect(board.getShipsAfloat().length).toBe(2);
+        });
+    });
+
+    describe('Pre-game setup: testing illegal spots', () => {
+        test('Board can test if a center spot is illegal', () => {
+            board.placeShip(mockShip1, 43);
+            console.log(board.getGridIllegal());
+            expect(board.getGridIllegal()[42]).toBeTruthy();
+            expect(board.getGridIllegal()[41]).toBeFalsy();
+        });
+        test('Board can test if a left spot is illegal', () => {
+            board.placeShip(mockShip1, 40);
+            console.log(board.getGridIllegal());
+            expect(board.getGridIllegal()[32]).toBeTruthy();
+            expect(board.getGridIllegal()[39]).toBeFalsy();
+        });
+        test('Board can test if a right spot is illegal', () => {
+            board.placeShip(mockShip1, 57);
+            console.log(board.getGridIllegal());
+            expect(board.getGridIllegal()[69]).toBeTruthy();
+            expect(board.getGridIllegal()[70]).toBeFalsy();
         });
     });
 
