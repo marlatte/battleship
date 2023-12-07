@@ -9,7 +9,7 @@ export const Player = (() => {
         human = !human;
     };
 
-    const chooseFrom = (grid) => {
+    const getCompChoice = (grid) => {
         const options = grid.reduce((acc, curr, index) => {
             if (curr === 0) {
                 acc.push(index);
@@ -25,7 +25,7 @@ export const Player = (() => {
 
     return {
         toggle,
-        chooseFrom,
+        getCompChoice,
         reset,
         isHumanTurn: () => human,
     };
