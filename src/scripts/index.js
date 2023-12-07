@@ -4,34 +4,8 @@ import '../styles/style.css';
 import { elFactory, htmlFactory } from './helpers';
 import { E, PubSub } from './pubsub';
 
-const TestButtons = (() => {
-    const startBtn = document.querySelector('#start-btn');
-    startBtn.addEventListener('click', Game.testShipPlacement);
-
-    const playerHits = document.querySelector('#player-hits');
-    playerHits.addEventListener('click', () => {
-        Player.reset();
-        PubSub.publish(E.TEST.FIRE, 3);
-    });
-    const playerMiss = document.querySelector('#player-miss');
-    playerMiss.addEventListener('click', () => {
-        Player.reset();
-        PubSub.publish(E.TEST.FIRE, 12);
-    });
-
-    const compHits = document.querySelector('#comp-hits');
-    compHits.addEventListener('click', () => {
-        Player.reset();
-        Player.toggle();
-        PubSub.publish(E.TEST.FIRE, 0);
-    });
-    const compMiss = document.querySelector('#comp-miss');
-    compMiss.addEventListener('click', () => {
-        Player.reset();
-        Player.toggle();
-        PubSub.publish(E.TEST.FIRE, 7);
-    });
-})();
+const startBtn = document.querySelector('#start-btn');
+startBtn.addEventListener('click', Game.testShipPlacement);
 
 const boardsContainer = document.querySelector('.boards .container');
 
@@ -39,6 +13,11 @@ function handlePlayerAttack(e) {
     const coord = e.target.dataset.attackCoord;
     if (!coord) return;
     PubSub.publish(E.TEST.FIRE, coord);
+}
+
+function updateCurrentPlayer(isHuman) {
+    const currentTurnText = document.querySelector('#current');
+    currentTurnText.textContent = isHuman ? 'Player' : 'Computer';
 }
 
 function updateBoards(
@@ -82,3 +61,7 @@ function updateBoards(
 updateBoards();
 
 const testUpdate = PubSub.subscribe(E.TEST.UPDATE, updateBoards);
+const toggleCurrentPlayer = PubSub.subscribe(
+    E.SCREEN.CURRENT_TEXT,
+    updateCurrentPlayer
+);

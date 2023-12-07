@@ -7,6 +7,7 @@ export const Player = (() => {
 
     const toggle = () => {
         human = !human;
+        PubSub.publish(E.SCREEN.CURRENT_TEXT, human);
     };
 
     const getCompChoice = (grid) => {
@@ -109,6 +110,7 @@ export const Game = (() => {
         boards.comp.placeShip(ships.c.carrier, 0);
         ships.c.battleship.changeVertical();
         boards.comp.placeShip(ships.c.battleship, 22);
+        boards.comp.placeShip(ships.c.cruiser, 45);
         boards.comp.placeShip(ships.c.destroyer, 94);
         boards.comp.placeShip(ships.c.submarine, 67);
         boards.comp.placeShip(ships.c.patrol1, 17);

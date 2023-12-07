@@ -37,4 +37,7 @@ export const E = {
         UPDATE: 'UpdateGrids',
         FIRE: 'PlayerFire',
     },
+    SCREEN: {
+        CURRENT_TEXT: 'UpdateCurrentPlayerText',
+    },
 };
