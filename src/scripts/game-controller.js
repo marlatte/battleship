@@ -64,7 +64,7 @@ export const Game = (() => {
 
     function publishUpdate() {
         PubSub.publish(
-            E.TEST.UPDATE,
+            E.SCREEN.UPDATE,
             boards.player.getGridShips(),
             boards.player.getGridAttacks(),
             boards.comp.getGridAttacks()
@@ -125,4 +125,4 @@ export const Game = (() => {
     return { reset, playRound, testShipPlacement };
 })();
 
-const testShot = PubSub.subscribe(E.TEST.FIRE, Game.playRound);
+const testShot = PubSub.subscribe(E.GAME.FIRE, Game.playRound);

@@ -12,7 +12,7 @@ const boardsContainer = document.querySelector('.boards .container');
 function handlePlayerAttack(e) {
     const coord = e.target.dataset.attackCoord;
     if (!coord) return;
-    PubSub.publish(E.TEST.FIRE, coord);
+    PubSub.publish(E.GAME.FIRE, coord);
 }
 
 function updateCurrentPlayer(isHuman) {
@@ -60,7 +60,7 @@ function updateBoards(
 
 updateBoards();
 
-const testUpdate = PubSub.subscribe(E.TEST.UPDATE, updateBoards);
+const testUpdate = PubSub.subscribe(E.SCREEN.UPDATE, updateBoards);
 const toggleCurrentPlayer = PubSub.subscribe(
     E.SCREEN.CURRENT_TEXT,
     updateCurrentPlayer

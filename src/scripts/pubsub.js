@@ -32,12 +32,12 @@ export const PubSub = (() => {
 })();
 
 export const E = {
-    TEST: {
+    GAME: {
         START: 'StartGame',
-        UPDATE: 'UpdateGrids',
         FIRE: 'PlayerFire',
     },
     SCREEN: {
+        UPDATE: 'UpdateGrids',
         CURRENT_TEXT: 'UpdateCurrentPlayerText',
     },
 };
