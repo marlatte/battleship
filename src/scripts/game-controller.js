@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import { BoardFactory, ShipFactory } from './board';
 import { E, PubSub } from './pubsub';
 
 export const Player = (() => {
@@ -7,7 +5,7 @@ export const Player = (() => {
 
     const toggle = () => {
         human = !human;
-        PubSub.publish(E.SCREEN.CURRENT_TEXT, human);
+        PubSub.publish(E.SCREEN.CURRENT, human);
     };
 
     const getCompChoice = (grid) => {
@@ -22,6 +20,7 @@ export const Player = (() => {
 
     const reset = () => {
         human = true;
+        PubSub.publish(E.SCREEN.CURRENT, human);
     };
 
     return {
@@ -32,95 +31,69 @@ export const Player = (() => {
     };
 })();
 
-export const Game = (() => {
-    const boards = {
-        p: {},
-        c: {},
-        reset: () => {
-            boards.p = BoardFactory();
-            boards.c = BoardFactory();
-        },
-    };
+const [
+    c,
+    p,
+    carrier,
+    battleship,
+    cruiser,
+    destroyer,
+    submarine,
+    patrol1,
+    patrol2,
+] = [
+    'c',
+    'p',
+    'carrier',
+    'battleship',
+    'cruiser',
+    'destroyer',
+    'submarine',
+    'patrol1',
+    'patrol2',
+];
 
-    const ships = {
-        p: {},
-        c: {},
-        reset: () => {
-            [
-                ['carrier', 5],
-                ['battleship', 4],
-                ['cruiser', 4],
-                ['destroyer', 3],
-                ['submarine', 3],
-                ['patrol1', 2],
-                ['patrol2', 2],
-            ].forEach(([name, len]) => {
-                ships.p[name] = ShipFactory(name, len);
-                ships.c[name] = ShipFactory(name, len);
-            });
-        },
-    };
-    ships.reset();
+function playRound(coord) {
+    const current = Player.isHumanTurn() ? 'c' : 'p';
+    PubSub.publish(E.BOARD.ATTACK, current, coord);
+    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
+}
 
-    function publishUpdate() {
-        PubSub.publish(
-            E.SCREEN.UPDATE,
-            boards.p.getGridShips(),
-            boards.p.getGridAttacks(),
-            boards.c.getGridAttacks()
-        );
+function checkCompTurn(grid) {
+    if (!Player.isHumanTurn()) {
+        setTimeout(() => {
+            playRound(Player.getCompChoice(grid));
+        }, 800);
     }
+}
 
-    function playRound(coord) {
-        const hit =
-            boards[Player.isHumanTurn() ? 'c' : 'p'].receiveAttack(coord);
-        publishUpdate();
-        if (!hit) Player.toggle();
-        if (!Player.isHumanTurn()) {
-            setTimeout(() => {
-                playRound(Player.getCompChoice(boards.p.getGridAttacks()));
-            }, 800);
-        }
-    }
+function resetGame() {
+    Player.reset();
+    PubSub.publish(E.BOARD.RESET);
+    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
+}
 
-    function reset() {
-        Player.reset();
-        boards.reset();
-        ships.reset();
-    }
+// devMode
+export function testShipPlacement() {
+    resetGame();
 
-    // devMode
-    function testShipPlacement() {
-        reset();
+    [p, c].forEach((player) => {
+        PubSub.publish(E.BOARD.PLACE, player, carrier, 0);
+        PubSub.publish(E.BOARD.TURN, player, battleship);
+        PubSub.publish(E.BOARD.PLACE, player, battleship, 22);
+        PubSub.publish(E.BOARD.PLACE, player, cruiser, 45);
+        PubSub.publish(E.BOARD.PLACE, player, destroyer, 94);
+        PubSub.publish(E.BOARD.PLACE, player, submarine, 67);
+        PubSub.publish(E.BOARD.PLACE, player, patrol1, 17);
+        PubSub.publish(E.BOARD.TURN, player, patrol2);
+        PubSub.publish(E.BOARD.PLACE, player, patrol2, 81);
+    });
 
-        // Player ships
-        boards.p.placeShip(ships.p.carrier, 0);
-        ships.p.battleship.changeVertical();
-        boards.p.placeShip(ships.p.battleship, 22);
-        boards.p.placeShip(ships.p.cruiser, 45);
-        boards.p.placeShip(ships.p.destroyer, 94);
-        boards.p.placeShip(ships.p.submarine, 67);
-        boards.p.placeShip(ships.p.patrol1, 17);
-        ships.p.patrol2.changeVertical();
-        boards.p.placeShip(ships.p.patrol2, 81);
+    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
+}
 
-        // Computer ships
-        boards.c.placeShip(ships.c.carrier, 0);
-        ships.c.battleship.changeVertical();
-        boards.c.placeShip(ships.c.battleship, 22);
-        boards.c.placeShip(ships.c.cruiser, 45);
-        boards.c.placeShip(ships.c.destroyer, 94);
-        boards.c.placeShip(ships.c.submarine, 67);
-        boards.c.placeShip(ships.c.patrol1, 17);
-        ships.c.patrol2.changeVertical();
-        boards.c.placeShip(ships.c.patrol2, 81);
+resetGame();
 
-        publishUpdate();
-    }
-
-    reset();
-
-    return { reset, playRound, testShipPlacement };
-})();
-
-const fireShot = PubSub.subscribe(E.GAME.FIRE, Game.playRound);
+PubSub.subscribe(E.GAME.FIRE, playRound);
+PubSub.subscribe(E.GAME.TOGGLE, Player.toggle);
+PubSub.subscribe(E.GAME.COMP_TURN, checkCompTurn);

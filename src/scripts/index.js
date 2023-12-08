@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { Game, Player } from './game-controller';
-import '../styles/style.css';
-import { elFactory, htmlFactory } from './helpers';
 import { E, PubSub } from './pubsub';
+import { testShipPlacement } from './game-controller';
+import './board';
+import { elFactory, htmlFactory } from './helpers';
+import '../styles/style.css';
 
 const startBtn = document.querySelector('#start-btn');
-startBtn.addEventListener('click', Game.testShipPlacement);
+startBtn.addEventListener('click', testShipPlacement);
 
 const boardsContainer = document.querySelector('.boards .container');
 
@@ -60,8 +61,5 @@ function updateBoards(
 
 updateBoards();
 
-const testUpdate = PubSub.subscribe(E.SCREEN.UPDATE, updateBoards);
-const toggleCurrentPlayer = PubSub.subscribe(
-    E.SCREEN.CURRENT_TEXT,
-    updateCurrentPlayer
-);
+PubSub.subscribe(E.SCREEN.GRID, updateBoards);
+PubSub.subscribe(E.SCREEN.CURRENT, updateCurrentPlayer);

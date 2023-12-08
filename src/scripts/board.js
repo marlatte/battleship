@@ -1,3 +1,5 @@
+import { E, PubSub } from './pubsub';
+
 export function ShipFactory(id, length) {
     let health = length;
     const hit = () => {
@@ -127,3 +129,77 @@ export const BoardFactory = () => {
         receiveAttack,
     };
 };
+
+const boards = {
+    p: {},
+    c: {},
+    reset: () => {
+        boards.p = BoardFactory();
+        boards.c = BoardFactory();
+    },
+};
+
+const ships = {
+    p: {},
+    c: {},
+    reset: () => {
+        [
+            ['carrier', 5],
+            ['battleship', 4],
+            ['cruiser', 4],
+            ['destroyer', 3],
+            ['submarine', 3],
+            ['patrol1', 2],
+            ['patrol2', 2],
+        ].forEach(([name, len]) => {
+            ships.p[name] = ShipFactory(name, len);
+            ships.c[name] = ShipFactory(name, len);
+        });
+    },
+};
+
+// Rename?
+function passPlacement(player, shipName, spot) {
+    boards[player].placeShip(ships[player][shipName], spot);
+}
+
+function turnShip(player, shipName) {
+    ships[player][shipName].changeVertical();
+}
+
+function passAttack(player, coord) {
+    const hit = boards[player].receiveAttack(coord);
+    if (!hit) {
+        PubSub.publish(E.GAME.TOGGLE);
+        PubSub.publish(E.GAME.COMP_TURN, boards.p.getGridAttacks());
+    } else if (player === 'p') {
+        PubSub.publish(E.GAME.COMP_TURN, boards.p.getGridAttacks());
+    }
+}
+
+// function gridify(grid) {
+//     return grid.reduce(
+//         (acc, curr, index) => {
+//             if (!(index % 10) && index > 0) acc.push([]);
+//             acc[acc.length - 1].push(curr);
+//             return acc;
+//         },
+//         [[]]
+//     );
+// }
+
+function updateGrids() {
+    PubSub.publish(
+        E.SCREEN.GRID,
+        boards.p.getGridShips(),
+        boards.p.getGridAttacks(),
+        boards.c.getGridAttacks()
+    );
+}
+
+PubSub.subscribe(E.BOARD.PUB_TO_SCREEN, updateGrids);
+PubSub.subscribe(E.BOARD.PLACE, passPlacement);
+PubSub.subscribe(E.BOARD.TURN, turnShip);
+PubSub.subscribe(E.BOARD.RESET, boards.reset);
+PubSub.subscribe(E.BOARD.RESET, ships.reset);
+PubSub.subscribe(E.BOARD.ATTACK, passAttack);

@@ -35,9 +35,19 @@ export const E = {
     GAME: {
         START: 'StartGame',
         FIRE: 'PlayerFire',
+        TOGGLE: 'TogglePlayer',
+        COMP_TURN: 'ComputerTurn',
     },
     SCREEN: {
-        UPDATE: 'UpdateGrids',
-        CURRENT_TEXT: 'UpdateCurrentPlayerText',
+        GRID: 'UpdateGrids',
+        CURRENT: 'UpdateCurrentPlayerText',
+        UNLOCK: 'UnlockGrid',
+    },
+    BOARD: {
+        ATTACK: 'ReceiveAttack',
+        RESET: 'ResetBoards',
+        PLACE: 'PlaceShip',
+        TURN: 'TurnShip',
+        PUB_TO_SCREEN: 'PublishToScreen',
     },
 };
