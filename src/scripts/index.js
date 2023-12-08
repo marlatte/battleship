@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { E, PubSub } from './pubsub';
 import { testShipPlacement } from './game-controller';
 import './board';
