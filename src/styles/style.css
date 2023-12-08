@@ -105,6 +105,48 @@ button.square {
 /* ---------------     /Boards     --------------- */
 /* ---------------     /Main     --------------- */
 
+/* ---------------     Modal     --------------- */
+
+.modal {
+    z-index: 1;
+    position: absolute;
+    height: 100svh;
+    width: 100vw;
+
+    display: grid;
+    place-content: center;
+
+    background-color: #80808052;
+    backdrop-filter: blur(2px);
+}
+
+.shrunk {
+    transform: scale(0);
+}
+
+.hidden {
+    display: none;
+}
+
+.pop-up {
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #fff;
+
+    text-align: center;
+
+    transition: all 1s;
+}
+
+/* ---------------     /Modal     --------------- */
+
 /* ---------------     Footer     --------------- */
 
 footer {
