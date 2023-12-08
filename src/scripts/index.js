@@ -8,8 +8,11 @@ const startBtn = document.querySelector('#start-btn');
 startBtn.addEventListener('click', testShipPlacement);
 
 const boardsContainer = document.querySelector('.boards .container');
+const winnerDisplay = document.querySelector('#winner');
+const modal = document.querySelector('.modal');
+const popUp = document.querySelector('.pop-up');
 
-function handlePlayerAttack(e) {
+function handleBoardClick(e) {
     const coord = e.target.dataset.attackCoord;
     if (!coord) return;
     PubSub.publish(E.GAME.FIRE, coord);
@@ -55,10 +58,19 @@ function updateBoards(
 
     document
         .querySelector('.board.attacks')
-        .addEventListener('click', handlePlayerAttack);
+        .addEventListener('click', handleBoardClick);
+}
+
+function endGameDisplay(winner) {
+    winnerDisplay.textContent = winner;
+    modal.classList.toggle('hidden');
+    setTimeout(() => {
+        popUp.classList.toggle('shrunk');
+    }, 150);
 }
 
 updateBoards();
 
 PubSub.subscribe(E.SCREEN.GRID, updateBoards);
 PubSub.subscribe(E.SCREEN.CURRENT, updateCurrentPlayer);
+PubSub.subscribe(E.SCREEN.OVER, endGameDisplay);

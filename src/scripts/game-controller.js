@@ -67,6 +67,15 @@ function checkCompTurn(grid) {
     }
 }
 
+function checkGameOver(pShips, cShips) {
+    PubSub.publish(E.SCREEN.AFLOAT, pShips.length, cShips.length);
+    if (pShips.length < 1) {
+        PubSub.publish(E.SCREEN.OVER, 'Computer');
+    } else if (cShips.length < 1) {
+        PubSub.publish(E.SCREEN.OVER, 'Player');
+    }
+}
+
 function resetGame() {
     Player.reset();
     PubSub.publish(E.BOARD.RESET);
@@ -97,3 +106,4 @@ resetGame();
 PubSub.subscribe(E.GAME.FIRE, playRound);
 PubSub.subscribe(E.GAME.TOGGLE, Player.toggle);
 PubSub.subscribe(E.GAME.COMP_TURN, checkCompTurn);
+PubSub.subscribe(E.GAME.AFLOAT, checkGameOver);

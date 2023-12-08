@@ -158,8 +158,7 @@ const ships = {
     },
 };
 
-// Rename?
-function passPlacement(player, shipName, spot) {
+function dropShip(player, shipName, spot) {
     boards[player].placeShip(ships[player][shipName], spot);
 }
 
@@ -167,8 +166,11 @@ function turnShip(player, shipName) {
     ships[player][shipName].changeVertical();
 }
 
-function passAttack(player, coord) {
+function handleAttack(player, coord) {
     const hit = boards[player].receiveAttack(coord);
+    const pShips = boards.p.getShipsAfloat();
+    const cShips = boards.c.getShipsAfloat();
+    PubSub.publish(E.GAME.AFLOAT, pShips, cShips);
     if (!hit) {
         PubSub.publish(E.GAME.TOGGLE);
         PubSub.publish(E.GAME.COMP_TURN, boards.p.getGridAttacks());
@@ -198,8 +200,8 @@ function updateGrids() {
 }
 
 PubSub.subscribe(E.BOARD.PUB_TO_SCREEN, updateGrids);
-PubSub.subscribe(E.BOARD.PLACE, passPlacement);
+PubSub.subscribe(E.BOARD.PLACE, dropShip);
 PubSub.subscribe(E.BOARD.TURN, turnShip);
 PubSub.subscribe(E.BOARD.RESET, boards.reset);
 PubSub.subscribe(E.BOARD.RESET, ships.reset);
-PubSub.subscribe(E.BOARD.ATTACK, passAttack);
+PubSub.subscribe(E.BOARD.ATTACK, handleAttack);
