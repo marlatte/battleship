@@ -72,9 +72,10 @@ export const Game = (() => {
     }
 
     function playRound(coord) {
-        boards[Player.isHumanTurn() ? 'c' : 'p'].receiveAttack(coord);
+        const hit =
+            boards[Player.isHumanTurn() ? 'c' : 'p'].receiveAttack(coord);
         publishUpdate();
-        Player.toggle();
+        if (!hit) Player.toggle();
         if (!Player.isHumanTurn()) {
             setTimeout(() => {
                 playRound(Player.getCompChoice(boards.p.getGridAttacks()));

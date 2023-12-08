@@ -38,9 +38,10 @@ export const Square = () => {
         if (ship) {
             attacked = 2;
             ship.hit();
-        } else {
-            attacked = 1;
+            return true;
         }
+        attacked = 1;
+        return false;
     };
 
     const checkShipAfloat = () => ship?.isAfloat();
@@ -111,8 +112,9 @@ export const BoardFactory = () => {
     };
 
     const receiveAttack = (coord) => {
-        grid[coord].attack();
+        const result = grid[coord].attack();
         updateShipsAfloat();
+        return result;
     };
 
     return {
