@@ -36,7 +36,6 @@ function handleBoardClick(e) {
 function updateCurrentPlayer(isHuman = true) {
     if (isHuman) {
         currentTurnText.textContent = 'Player';
-        // Unlock grid
         document
             .querySelector('.board.attacks')
             .addEventListener('click', handleBoardClick);
