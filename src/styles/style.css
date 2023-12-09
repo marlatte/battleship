@@ -22,6 +22,14 @@ body {
     flex-direction: column;
 }
 
+.shrunk {
+    transform: scale(0);
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* ---------------     /Utilities & Universals     --------------- */
 /* ---------------     CONTENT     --------------- */
 
@@ -41,7 +49,7 @@ main {
     justify-content: center;
 }
 /* ---------------     Boards     --------------- */
-.boards {
+.game-boards {
     margin-top: 10px;
     display: grid;
     place-content: center;
@@ -116,6 +124,31 @@ button.square {
 /* ---------------     /Scores     --------------- */
 /* ---------------     /Main     --------------- */
 
+/* ---------------     Home-Screen     --------------- */
+
+.home-screen {
+    z-index: 1;
+    position: absolute;
+    height: 100svh;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    background-color: navy;
+    color: white;
+}
+
+#random-board {
+    padding: 10px;
+    font-size: 1.2rem;
+}
+
+/* ---------------     /Home-Screen     --------------- */
+
 /* ---------------     Modal     --------------- */
 
 .modal {
@@ -129,14 +162,6 @@ button.square {
 
     background-color: #80808052;
     backdrop-filter: blur(2px);
-}
-
-.shrunk {
-    transform: scale(0);
-}
-
-.hidden {
-    display: none;
 }
 
 .pop-up {

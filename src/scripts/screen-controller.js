@@ -4,8 +4,11 @@ import { elFactory, htmlFactory } from './helpers';
 
 const startBtn = document.querySelector('#start-btn');
 
+const homeScreen = document.querySelector('.home-screen');
 const currentTurnText = document.querySelector('#current');
-const boardsContainer = document.querySelector('.boards .container');
+const placementBoard = document.querySelector('.placement-board');
+const gameBoards = document.querySelector('section.game-boards');
+const gameBoardsContainer = document.querySelector('.game-boards .container');
 const pScoreDisplay = document.querySelector('#player-score');
 const cScoreDisplay = document.querySelector('#computer-score');
 const winnerDisplay = document.querySelector('#winner');
@@ -13,105 +16,149 @@ const modal = document.querySelector('.modal');
 const popUp = document.querySelector('.pop-up');
 const newGameBtn = document.querySelector('#new-game-btn');
 
-function endGameDisplay(winner) {
-    winnerDisplay.textContent = winner;
-    modal.classList.toggle('hidden');
-    setTimeout(() => {
-        popUp.classList.toggle('shrunk');
-    }, 150);
-}
+const preGame = (() => {
+    const randomBtn = document.querySelector('#random-board');
 
-function handleBoardClick(e) {
-    const coord = e.target.dataset.attackCoord;
-    if (!coord) return;
-    document
-        .querySelector('.board.attacks')
-        .removeEventListener('click', handleBoardClick);
-    const gameOver = playRound(coord);
-    if (gameOver) {
-        endGameDisplay(gameOver);
+    function populateBoard(shipsGrid = []) {
+        const gridDisplay = elFactory('div', { classList: 'placement board' });
+        for (let i = 0; i < 100; i += 1) {
+            const taken = shipsGrid[i] ? ' ship' : '';
+            gridDisplay.children.push(
+                elFactory('div', {
+                    textContent: i, // devMode
+                    classList: `square${taken}`,
+                    dataset: { placeCoord: i },
+                })
+            );
+        }
+        placementBoard.appendChild(htmlFactory(gridDisplay));
     }
-}
 
-function updateCurrentPlayer(isHuman = true) {
-    if (isHuman) {
-        currentTurnText.textContent = 'Player';
+    function showHome() {
+        homeScreen.classList.remove('up-north');
+        populateBoard();
+    }
+
+    function hideHome() {
+        homeScreen.classList.add('up-north');
+    }
+
+    function placeRandom() {}
+
+    randomBtn.addEventListener('click', placeRandom);
+
+    populateBoard();
+
+    return { showHome, hideHome };
+})();
+
+const Game = (() => {
+    function endGameDisplay(winner) {
+        winnerDisplay.textContent = winner;
+        modal.classList.toggle('hidden');
+        setTimeout(() => {
+            popUp.classList.toggle('shrunk');
+        }, 150);
+    }
+
+    function handleBoardClick(e) {
+        const coord = e.target.dataset.attackCoord;
+        if (!coord) return;
         document
             .querySelector('.board.attacks')
-            .addEventListener('click', handleBoardClick);
-    } else {
-        currentTurnText.textContent = 'Computer';
-    }
-}
-
-function updateBoards(
-    playerShipsGrid = [],
-    playerAttacksGrid = [],
-    compAttacksGrid = []
-) {
-    boardsContainer.textContent = '';
-    const shipsBoard = elFactory('div', { classList: 'board ships' });
-    const attacksBoard = elFactory('div', { classList: 'board attacks' });
-
-    for (let i = 0; i < 100; i += 1) {
-        const taken = playerShipsGrid[i] ? ' ship' : '';
-        const compAttack = ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
-        shipsBoard.children.push(
-            elFactory('div', {
-                textContent: i, // devMode
-                classList: `square${taken}${compAttack}`,
-                dataset: { shipCoord: i },
-            })
-        );
-
-        const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
-        attacksBoard.children.push(
-            elFactory('button', {
-                textContent: i, // devMode
-                classList: `square${playerAttack}`,
-                dataset: { attackCoord: i },
-            })
-        );
+            .removeEventListener('click', handleBoardClick);
+        const gameOver = playRound(coord);
+        if (gameOver) {
+            endGameDisplay(gameOver);
+        }
     }
 
-    boardsContainer.appendChild(htmlFactory(shipsBoard));
-    boardsContainer.appendChild(htmlFactory(attacksBoard));
-}
+    function updateCurrentPlayer(isHuman = true) {
+        if (isHuman) {
+            currentTurnText.textContent = 'Player';
+            document
+                .querySelector('.board.attacks')
+                .addEventListener('click', handleBoardClick);
+        } else {
+            currentTurnText.textContent = 'Computer';
+        }
+    }
 
-function updateScores(pScore, cScore) {
-    pScoreDisplay.textContent = pScore;
-    cScoreDisplay.textContent = cScore;
-}
+    function updateGameBoards(
+        playerShipsGrid = [],
+        playerAttacksGrid = [],
+        compAttacksGrid = []
+    ) {
+        gameBoardsContainer.textContent = '';
+        const shipsBoard = elFactory('div', { classList: 'board ships' });
+        const attacksBoard = elFactory('div', { classList: 'board attacks' });
 
-function updateDisplay() {
-    // Gets info from game-controller
-    const {
-        playerShipsGrid,
-        playerAttacksGrid,
-        compAttacksGrid,
-        isHuman,
-        pScore,
-        cScore,
-    } = getGameState();
+        for (let i = 0; i < 100; i += 1) {
+            const taken = playerShipsGrid[i] ? ' ship' : '';
+            const compAttack =
+                ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
+            shipsBoard.children.push(
+                elFactory('div', {
+                    textContent: i, // devMode
+                    classList: `square${taken}${compAttack}`,
+                    dataset: { shipCoord: i },
+                })
+            );
 
-    // Updates boards, current player, and scores
-    updateBoards(playerShipsGrid, playerAttacksGrid, compAttacksGrid);
-    updateCurrentPlayer(isHuman);
-    updateScores(pScore, cScore);
-}
+            const playerAttack =
+                ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
+            attacksBoard.children.push(
+                elFactory('button', {
+                    textContent: i, // devMode
+                    classList: `square${playerAttack}`,
+                    dataset: { attackCoord: i },
+                })
+            );
+        }
 
-updateDisplay();
+        gameBoardsContainer.appendChild(htmlFactory(shipsBoard));
+        gameBoardsContainer.appendChild(htmlFactory(attacksBoard));
+    }
 
-// devMode
-startBtn.addEventListener('click', () => {
-    testShipPlacement();
+    function updateScores(pScore, cScore) {
+        pScoreDisplay.textContent = pScore;
+        cScoreDisplay.textContent = cScore;
+    }
+
+    function updateDisplay() {
+        // Gets info from game-controller
+        const {
+            playerShipsGrid,
+            playerAttacksGrid,
+            compAttacksGrid,
+            isHuman,
+            pScore,
+            cScore,
+        } = getGameState();
+
+        // Updates boards, current player, and scores
+        updateGameBoards(playerShipsGrid, playerAttacksGrid, compAttacksGrid);
+        updateCurrentPlayer(isHuman);
+        updateScores(pScore, cScore);
+    }
+
     updateDisplay();
-});
 
-// devMode
-newGameBtn.addEventListener('click', () => {
-    testShipPlacement();
-    updateDisplay();
-});
+    // devMode
+    startBtn.addEventListener('click', () => {
+        gameBoards.classList.remove('hidden');
+        placementBoard.classList.add('hidden');
+        testShipPlacement();
+        updateDisplay();
+    });
 
-PubSub.subscribe(E.UPDATE, updateDisplay);
+    // devMode
+    newGameBtn.addEventListener('click', () => {
+        testShipPlacement();
+        updateDisplay();
+    });
+
+    return { updateDisplay };
+})();
+
+PubSub.subscribe(E.UPDATE, Game.updateDisplay);
