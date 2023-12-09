@@ -94,7 +94,7 @@ export const BoardFactory = () => {
         const multiplier = isVertical() ? 10 : 1;
         const end = start + multiplier * length;
         for (let i = start; i < end; i += multiplier) {
-            const vertBool = i > 100;
+            const vertBool = i >= 100;
             const horizBool = !(i % 10) || vertBool;
             if (
                 (isVertical() ? vertBool : horizBool && i !== start) ||
@@ -131,9 +131,13 @@ export const BoardFactory = () => {
 export const boards = {
     p: {},
     c: {},
-    reset: () => {
-        boards.p = BoardFactory();
-        boards.c = BoardFactory();
+    reset: (target = false) => {
+        if (target) {
+            boards[target] = BoardFactory();
+        } else {
+            boards.p = BoardFactory();
+            boards.c = BoardFactory();
+        }
     },
 };
 

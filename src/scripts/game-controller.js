@@ -90,7 +90,8 @@ export function testShipPlacement() {
     });
 }
 
-function placeRandomShips(player) {
+export function placeRandomShips(player) {
+    boards.reset(player);
     const failedSpots = [];
     const shipNames = [
         'carrier',
@@ -101,24 +102,38 @@ function placeRandomShips(player) {
         'patrol1',
         'patrol2',
     ];
-    shipNames.forEach(([name]) => {
-        /*
-        WHILE failedSpots.length < 95
-            Choose a random open spot on getIllegalGrid()
-            Flip a coin as to whether to make it vertical or not
-            Attempt placement
-            If it fails, changeVertical,
-            If it still fails, push the spot to failedSpots
+    shipNames.forEach((name) => {
+        const ship = ships[player][name];
+        let success = false;
+        while (failedSpots.length < 88 && !success) {
+            const openIndices = boards[player]
+                .getGridIllegal()
+                .map((val, index) => ({ val, index }))
+                .filter((item) => item.val === 0)
+                .map((item) => item.index);
+            const spot =
+                openIndices[
+                    Math.floor(Math.random() * (openIndices.length - 1))
+                ];
 
-        
-        OLD CODE:
+            if (Math.floor(Math.random() + 0.5)) {
+                ship.changeVertical();
+            }
 
-        if (shipDoesntFit) {
-            ships[player][name].changeVertical();
+            success = boards[player].placeShip(ship, spot);
+
+            if (!success) {
+                ship.changeVertical();
+                success = boards[player].placeShip(ship, spot);
+                if (!success) {
+                    failedSpots.push(spot);
+                }
+            }
         }
-        boards[player].placeShip(ships[player][name], spot);
-        */
     });
+    if (failedSpots.length > 88) {
+        throw new Error('Not all ships placed');
+    }
 }
 
 export function getGameState() {

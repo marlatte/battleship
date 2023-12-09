@@ -1,5 +1,10 @@
 import { E, PubSub } from './pubsub';
-import { getGameState, playRound, testShipPlacement } from './game-controller';
+import {
+    getGameState,
+    placeRandomShips,
+    playRound,
+    testShipPlacement,
+} from './game-controller';
 import { elFactory, htmlFactory } from './helpers';
 
 const startBtn = document.querySelector('#start-btn');
@@ -149,7 +154,8 @@ const Game = (() => {
     // devMode
     startBtn.addEventListener('click', () => {
         gameBoards.classList.remove('hidden');
-        testShipPlacement();
+        placeRandomShips('p');
+        placeRandomShips('c');
         updateDisplay();
     });
 
