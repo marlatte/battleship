@@ -4,19 +4,9 @@ import { elFactory, htmlFactory } from './helpers';
 
 const startBtn = document.querySelector('#start-btn');
 
-const homeScreen = document.querySelector('.home-screen');
-const currentTurnText = document.querySelector('#current');
-const placementBoard = document.querySelector('.placement-board');
-const gameBoards = document.querySelector('section.game-boards');
-const gameBoardsContainer = document.querySelector('.game-boards .container');
-const pScoreDisplay = document.querySelector('#player-score');
-const cScoreDisplay = document.querySelector('#computer-score');
-const winnerDisplay = document.querySelector('#winner');
-const modal = document.querySelector('.modal');
-const popUp = document.querySelector('.pop-up');
-const newGameBtn = document.querySelector('#new-game-btn');
-
 const preGame = (() => {
+    const homeScreen = document.querySelector('.home-screen');
+    const placementBoard = document.querySelector('.placement-board');
     const randomBtn = document.querySelector('#random-board');
 
     function populateBoard(shipsGrid = []) {
@@ -53,6 +43,18 @@ const preGame = (() => {
 })();
 
 const Game = (() => {
+    const currentTurnText = document.querySelector('#current');
+    const gameBoards = document.querySelector('section.game-boards');
+    const gameBoardsContainer = document.querySelector(
+        '.game-boards .container'
+    );
+    const pScoreDisplay = document.querySelector('#player-score');
+    const cScoreDisplay = document.querySelector('#computer-score');
+    const winnerDisplay = document.querySelector('#winner');
+    const modal = document.querySelector('.modal');
+    const popUp = document.querySelector('.pop-up');
+    const newGameBtn = document.querySelector('#new-game-btn');
+
     function endGameDisplay(winner) {
         winnerDisplay.textContent = winner;
         modal.classList.toggle('hidden');
@@ -147,7 +149,6 @@ const Game = (() => {
     // devMode
     startBtn.addEventListener('click', () => {
         gameBoards.classList.remove('hidden');
-        placementBoard.classList.add('hidden');
         testShipPlacement();
         updateDisplay();
     });

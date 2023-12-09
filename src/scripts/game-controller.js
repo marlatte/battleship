@@ -30,28 +30,7 @@ export const Player = (() => {
     };
 })();
 
-const [
-    c,
-    p,
-    carrier,
-    battleship,
-    cruiser,
-    destroyer,
-    submarine,
-    patrol1,
-    patrol2,
-] = [
-    'c',
-    'p',
-    'carrier',
-    'battleship',
-    'cruiser',
-    'destroyer',
-    'submarine',
-    'patrol1',
-    'patrol2',
-];
-
+export const Game = (() => {})();
 function checkGameOver() {
     let winner = '';
     if (boards.p.getShipsAfloat().length < 1) {
@@ -93,21 +72,52 @@ function resetGame() {
 export function testShipPlacement() {
     resetGame();
 
-    [p, c].forEach((player) => {
+    ['p', 'c'].forEach((player) => {
         [
-            [carrier, 0],
-            [battleship, 22],
-            [cruiser, 45],
-            [destroyer, 94],
-            [submarine, 67],
-            [patrol1, 17],
-            [patrol2, 81],
+            ['carrier', 0],
+            ['battleship', 22],
+            ['cruiser', 45],
+            ['destroyer', 94],
+            ['submarine', 67],
+            ['patrol1', 17],
+            ['patrol2', 81],
         ].forEach(([shipName, spot]) => {
-            if (shipName === battleship || shipName === patrol2) {
+            if (shipName === 'battleship' || shipName === 'patrol2') {
                 ships[player][shipName].changeVertical();
             }
             boards[player].placeShip(ships[player][shipName], spot);
         });
+    });
+}
+
+function placeRandomShips(player) {
+    const failedSpots = [];
+    const shipNames = [
+        'carrier',
+        'battleship',
+        'cruiser',
+        'destroyer',
+        'submarine',
+        'patrol1',
+        'patrol2',
+    ];
+    shipNames.forEach(([name]) => {
+        /*
+        WHILE failedSpots.length < 95
+            Choose a random open spot on getIllegalGrid()
+            Flip a coin as to whether to make it vertical or not
+            Attempt placement
+            If it fails, changeVertical,
+            If it still fails, push the spot to failedSpots
+
+        
+        OLD CODE:
+
+        if (shipDoesntFit) {
+            ships[player][name].changeVertical();
+        }
+        boards[player].placeShip(ships[player][name], spot);
+        */
     });
 }
 
