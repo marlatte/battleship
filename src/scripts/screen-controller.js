@@ -11,6 +11,15 @@ const cScoreDisplay = document.querySelector('#computer-score');
 const winnerDisplay = document.querySelector('#winner');
 const modal = document.querySelector('.modal');
 const popUp = document.querySelector('.pop-up');
+const newGameBtn = document.querySelector('#new-game-btn');
+
+function endGameDisplay(winner) {
+    winnerDisplay.textContent = winner;
+    modal.classList.toggle('hidden');
+    setTimeout(() => {
+        popUp.classList.toggle('shrunk');
+    }, 150);
+}
 
 function handleBoardClick(e) {
     const coord = e.target.dataset.attackCoord;
@@ -18,7 +27,10 @@ function handleBoardClick(e) {
     document
         .querySelector('.board.attacks')
         .removeEventListener('click', handleBoardClick);
-    playRound(coord);
+    const gameOver = playRound(coord);
+    if (gameOver) {
+        endGameDisplay(gameOver);
+    }
 }
 
 function updateCurrentPlayer(isHuman = true) {
@@ -89,20 +101,18 @@ function updateDisplay() {
     updateScores(pScore, cScore);
 }
 
-function endGameDisplay(winner) {
-    winnerDisplay.textContent = winner;
-    modal.classList.toggle('hidden');
-    setTimeout(() => {
-        popUp.classList.toggle('shrunk');
-    }, 150);
-}
-
 updateDisplay();
 
+// devMode
 startBtn.addEventListener('click', () => {
     testShipPlacement();
     updateDisplay();
 });
 
-PubSub.subscribe(E.SCREEN.OVER, endGameDisplay);
-PubSub.subscribe(E.SCREEN.UPDATE, updateDisplay);
+// devMode
+newGameBtn.addEventListener('click', () => {
+    testShipPlacement();
+    updateDisplay();
+});
+
+PubSub.subscribe(E.UPDATE, updateDisplay);

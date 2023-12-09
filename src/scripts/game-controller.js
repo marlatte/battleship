@@ -52,39 +52,41 @@ const [
     'patrol2',
 ];
 
-function checkGameOver(pShips, cShips) {
-    if (pShips.length < 1) {
-        PubSub.publish(E.SCREEN.OVER, 'Computer');
-    } else if (cShips.length < 1) {
-        PubSub.publish(E.SCREEN.OVER, 'Player');
+function checkGameOver() {
+    let winner = '';
+    if (boards.p.getShipsAfloat().length < 1) {
+        winner = 'Computer';
     }
+    if (boards.c.getShipsAfloat().length < 1) {
+        winner = 'Player';
+    }
+    return winner;
 }
 
 export function playRound(coord) {
     const opponent = Player.isHumanTurn() ? 'c' : 'p';
     const hit = boards[opponent].receiveAttack(coord);
-    if (hit) {
-        const pShips = boards.p.getShipsAfloat();
-        const cShips = boards.c.getShipsAfloat();
-        checkGameOver(pShips, cShips);
-    } else {
-        Player.toggle();
-    }
+    const gameOver = checkGameOver();
 
-    PubSub.publish(E.SCREEN.UPDATE);
+    if (!hit) Player.toggle();
+
+    PubSub.publish(E.UPDATE);
+
+    if (gameOver) return gameOver;
 
     if (!Player.isHumanTurn()) {
         setTimeout(() => {
             playRound(Player.getCompChoice(boards.p.getGridAttacks()));
         }, 800);
     }
+    return false;
 }
 
 function resetGame() {
     Player.reset();
     boards.reset();
     ships.reset();
-    PubSub.publish(E.SCREEN.UPDATE);
+    PubSub.publish(E.UPDATE);
 }
 
 // devMode

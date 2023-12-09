@@ -32,11 +32,5 @@ export const PubSub = (() => {
 })();
 
 export const E = {
-    SCREEN: {
-        AFLOAT: 'UpdateShipsAfloat',
-        GRID: 'UpdateGrids',
-        UNLOCK: 'UnlockGrid',
-        UPDATE: 'UpdateDisplay',
-        OVER: 'GameOver',
-    },
+    UPDATE: 'UpdateDisplay',
 };
