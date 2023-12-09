@@ -53,7 +53,6 @@ const [
 ];
 
 function checkGameOver(pShips, cShips) {
-    PubSub.publish(E.SCREEN.AFLOAT, pShips.length, cShips.length);
     if (pShips.length < 1) {
         PubSub.publish(E.SCREEN.OVER, 'Computer');
     } else if (cShips.length < 1) {
@@ -116,6 +115,8 @@ export function getGameState() {
         playerAttacksGrid: boards.p.getGridAttacks(),
         compAttacksGrid: boards.c.getGridAttacks(),
         isHuman: Player.isHumanTurn(),
+        pScore: boards.p.getShipsAfloat().length,
+        cScore: boards.c.getShipsAfloat().length,
     };
 }
 

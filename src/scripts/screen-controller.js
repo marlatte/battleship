@@ -4,14 +4,33 @@ import { elFactory, htmlFactory } from './helpers';
 
 const startBtn = document.querySelector('#start-btn');
 
+const currentTurnText = document.querySelector('#current');
 const boardsContainer = document.querySelector('.boards .container');
+const pScoreDisplay = document.querySelector('#player-score');
+const cScoreDisplay = document.querySelector('#computer-score');
 const winnerDisplay = document.querySelector('#winner');
 const modal = document.querySelector('.modal');
 const popUp = document.querySelector('.pop-up');
 
+function handleBoardClick(e) {
+    const coord = e.target.dataset.attackCoord;
+    if (!coord) return;
+    document
+        .querySelector('.board.attacks')
+        .removeEventListener('click', handleBoardClick);
+    playRound(coord);
+}
+
 function updateCurrentPlayer(isHuman = true) {
-    const currentTurnText = document.querySelector('#current');
-    currentTurnText.textContent = isHuman ? 'Player' : 'Computer';
+    if (isHuman) {
+        currentTurnText.textContent = 'Player';
+        // Unlock grid
+        document
+            .querySelector('.board.attacks')
+            .addEventListener('click', handleBoardClick);
+    } else {
+        currentTurnText.textContent = 'Computer';
+    }
 }
 
 function updateBoards(
@@ -48,26 +67,26 @@ function updateBoards(
     boardsContainer.appendChild(htmlFactory(attacksBoard));
 }
 
-function updateDisplay() {
-    // Gets info from game-controller
-    const { playerShipsGrid, playerAttacksGrid, compAttacksGrid, isHuman } =
-        getGameState();
-    // Calls updateBoards(info) and updateCurrentPlayer(info)
-    updateBoards(playerShipsGrid, playerAttacksGrid, compAttacksGrid);
-    updateCurrentPlayer(isHuman);
-
-    // Updates number of ships left for each
-
-    document
-        .querySelector('.board.attacks')
-        // eslint-disable-next-line no-use-before-define
-        .addEventListener('click', handleBoardClick);
+function updateScores(pScore, cScore) {
+    pScoreDisplay.textContent = pScore;
+    cScoreDisplay.textContent = cScore;
 }
 
-function handleBoardClick(e) {
-    const coord = e.target.dataset.attackCoord;
-    if (!coord) return;
-    playRound(coord);
+function updateDisplay() {
+    // Gets info from game-controller
+    const {
+        playerShipsGrid,
+        playerAttacksGrid,
+        compAttacksGrid,
+        isHuman,
+        pScore,
+        cScore,
+    } = getGameState();
+
+    // Updates boards, current player, and scores
+    updateBoards(playerShipsGrid, playerAttacksGrid, compAttacksGrid);
+    updateCurrentPlayer(isHuman);
+    updateScores(pScore, cScore);
 }
 
 function endGameDisplay(winner) {
