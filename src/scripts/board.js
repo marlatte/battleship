@@ -38,7 +38,8 @@ export const Square = () => {
         if (ship) {
             attacked = 2;
             ship.hit();
-            return true;
+            const sunk = !ship.isAfloat();
+            return { hit: true, sunk };
         }
         attacked = 1;
         return false;
