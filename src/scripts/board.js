@@ -1,5 +1,3 @@
-import { E, PubSub } from './pubsub';
-
 export function ShipFactory(id, length) {
     let health = length;
     const hit = () => {
@@ -130,7 +128,7 @@ export const BoardFactory = () => {
     };
 };
 
-const boards = {
+export const boards = {
     p: {},
     c: {},
     reset: () => {
@@ -139,7 +137,7 @@ const boards = {
     },
 };
 
-const ships = {
+export const ships = {
     p: {},
     c: {},
     reset: () => {
@@ -158,27 +156,6 @@ const ships = {
     },
 };
 
-function dropShip(player, shipName, spot) {
-    boards[player].placeShip(ships[player][shipName], spot);
-}
-
-function turnShip(player, shipName) {
-    ships[player][shipName].changeVertical();
-}
-
-function handleAttack(player, coord) {
-    const hit = boards[player].receiveAttack(coord);
-    const pShips = boards.p.getShipsAfloat();
-    const cShips = boards.c.getShipsAfloat();
-    PubSub.publish(E.GAME.AFLOAT, pShips, cShips);
-    if (!hit) {
-        PubSub.publish(E.GAME.TOGGLE);
-        PubSub.publish(E.GAME.COMP_TURN, boards.p.getGridAttacks());
-    } else if (player === 'p') {
-        PubSub.publish(E.GAME.COMP_TURN, boards.p.getGridAttacks());
-    }
-}
-
 // function gridify(grid) {
 //     return grid.reduce(
 //         (acc, curr, index) => {
@@ -189,19 +166,3 @@ function handleAttack(player, coord) {
 //         [[]]
 //     );
 // }
-
-function updateGrids() {
-    PubSub.publish(
-        E.SCREEN.GRID,
-        boards.p.getGridShips(),
-        boards.p.getGridAttacks(),
-        boards.c.getGridAttacks()
-    );
-}
-
-PubSub.subscribe(E.BOARD.PUB_TO_SCREEN, updateGrids);
-PubSub.subscribe(E.BOARD.PLACE, dropShip);
-PubSub.subscribe(E.BOARD.TURN, turnShip);
-PubSub.subscribe(E.BOARD.RESET, boards.reset);
-PubSub.subscribe(E.BOARD.RESET, ships.reset);
-PubSub.subscribe(E.BOARD.ATTACK, handleAttack);

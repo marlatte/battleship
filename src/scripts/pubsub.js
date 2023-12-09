@@ -32,25 +32,11 @@ export const PubSub = (() => {
 })();
 
 export const E = {
-    GAME: {
-        AFLOAT: 'CheckShipsAfloat',
-        COMP_TURN: 'ComputerTurn',
-        FIRE: 'PlayerFire',
-        START: 'StartGame',
-        TOGGLE: 'TogglePlayer',
-    },
     SCREEN: {
         AFLOAT: 'UpdateShipsAfloat',
-        CURRENT: 'UpdateCurrentPlayerText',
         GRID: 'UpdateGrids',
         UNLOCK: 'UnlockGrid',
+        UPDATE: 'UpdateDisplay',
         OVER: 'GameOver',
-    },
-    BOARD: {
-        ATTACK: 'ReceiveAttack',
-        PLACE: 'PlaceShip',
-        PUB_TO_SCREEN: 'PublishToScreen',
-        RESET: 'ResetBoards',
-        TURN: 'TurnShip',
     },
 };

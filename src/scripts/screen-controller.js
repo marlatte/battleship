@@ -1,5 +1,5 @@
 import { E, PubSub } from './pubsub';
-import { testShipPlacement } from './game-controller';
+import { getGameState, playRound, testShipPlacement } from './game-controller';
 import { elFactory, htmlFactory } from './helpers';
 
 const startBtn = document.querySelector('#start-btn');
@@ -8,17 +8,6 @@ const boardsContainer = document.querySelector('.boards .container');
 const winnerDisplay = document.querySelector('#winner');
 const modal = document.querySelector('.modal');
 const popUp = document.querySelector('.pop-up');
-
-function updateDisplay() {
-    // Gets info from game-controller
-    // Calls updateBoards(info) and updateCurrentPlayer(info)
-}
-
-function handleBoardClick(e) {
-    const coord = e.target.dataset.attackCoord;
-    if (!coord) return;
-    PubSub.publish(E.GAME.FIRE, coord);
-}
 
 function updateCurrentPlayer(isHuman = true) {
     const currentTurnText = document.querySelector('#current');
@@ -57,10 +46,28 @@ function updateBoards(
 
     boardsContainer.appendChild(htmlFactory(shipsBoard));
     boardsContainer.appendChild(htmlFactory(attacksBoard));
+}
+
+function updateDisplay() {
+    // Gets info from game-controller
+    const { playerShipsGrid, playerAttacksGrid, compAttacksGrid, isHuman } =
+        getGameState();
+    // Calls updateBoards(info) and updateCurrentPlayer(info)
+    updateBoards(playerShipsGrid, playerAttacksGrid, compAttacksGrid);
+    updateCurrentPlayer(isHuman);
+
+    // Updates number of ships left for each
 
     document
         .querySelector('.board.attacks')
+        // eslint-disable-next-line no-use-before-define
         .addEventListener('click', handleBoardClick);
+}
+
+function handleBoardClick(e) {
+    const coord = e.target.dataset.attackCoord;
+    if (!coord) return;
+    playRound(coord);
 }
 
 function endGameDisplay(winner) {
@@ -71,13 +78,12 @@ function endGameDisplay(winner) {
     }, 150);
 }
 
-updateBoards();
-
-PubSub.subscribe(E.SCREEN.GRID, updateBoards);
-PubSub.subscribe(E.SCREEN.CURRENT, updateCurrentPlayer);
-PubSub.subscribe(E.SCREEN.OVER, endGameDisplay);
+updateDisplay();
 
 startBtn.addEventListener('click', () => {
     testShipPlacement();
     updateDisplay();
 });
+
+PubSub.subscribe(E.SCREEN.OVER, endGameDisplay);
+PubSub.subscribe(E.SCREEN.UPDATE, updateDisplay);

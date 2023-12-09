@@ -1,3 +1,4 @@
+import { boards, ships } from './board';
 import { E, PubSub } from './pubsub';
 
 export const Player = (() => {
@@ -5,7 +6,6 @@ export const Player = (() => {
 
     const toggle = () => {
         human = !human;
-        PubSub.publish(E.SCREEN.CURRENT, human);
     };
 
     const getCompChoice = (grid) => {
@@ -20,7 +20,6 @@ export const Player = (() => {
 
     const reset = () => {
         human = true;
-        PubSub.publish(E.SCREEN.CURRENT, human);
     };
 
     return {
@@ -53,20 +52,6 @@ const [
     'patrol2',
 ];
 
-function playRound(coord) {
-    const current = Player.isHumanTurn() ? 'c' : 'p';
-    PubSub.publish(E.BOARD.ATTACK, current, coord);
-    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
-}
-
-function checkCompTurn(grid) {
-    if (!Player.isHumanTurn()) {
-        setTimeout(() => {
-            playRound(Player.getCompChoice(grid));
-        }, 800);
-    }
-}
-
 function checkGameOver(pShips, cShips) {
     PubSub.publish(E.SCREEN.AFLOAT, pShips.length, cShips.length);
     if (pShips.length < 1) {
@@ -76,10 +61,31 @@ function checkGameOver(pShips, cShips) {
     }
 }
 
+export function playRound(coord) {
+    const opponent = Player.isHumanTurn() ? 'c' : 'p';
+    const hit = boards[opponent].receiveAttack(coord);
+    if (hit) {
+        const pShips = boards.p.getShipsAfloat();
+        const cShips = boards.c.getShipsAfloat();
+        checkGameOver(pShips, cShips);
+    } else {
+        Player.toggle();
+    }
+
+    PubSub.publish(E.SCREEN.UPDATE);
+
+    if (!Player.isHumanTurn()) {
+        setTimeout(() => {
+            playRound(Player.getCompChoice(boards.p.getGridAttacks()));
+        }, 800);
+    }
+}
+
 function resetGame() {
     Player.reset();
-    PubSub.publish(E.BOARD.RESET);
-    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
+    boards.reset();
+    ships.reset();
+    PubSub.publish(E.SCREEN.UPDATE);
 }
 
 // devMode
@@ -87,23 +93,30 @@ export function testShipPlacement() {
     resetGame();
 
     [p, c].forEach((player) => {
-        PubSub.publish(E.BOARD.PLACE, player, carrier, 0);
-        PubSub.publish(E.BOARD.TURN, player, battleship);
-        PubSub.publish(E.BOARD.PLACE, player, battleship, 22);
-        PubSub.publish(E.BOARD.PLACE, player, cruiser, 45);
-        PubSub.publish(E.BOARD.PLACE, player, destroyer, 94);
-        PubSub.publish(E.BOARD.PLACE, player, submarine, 67);
-        PubSub.publish(E.BOARD.PLACE, player, patrol1, 17);
-        PubSub.publish(E.BOARD.TURN, player, patrol2);
-        PubSub.publish(E.BOARD.PLACE, player, patrol2, 81);
+        [
+            [carrier, 0],
+            [battleship, 22],
+            [cruiser, 45],
+            [destroyer, 94],
+            [submarine, 67],
+            [patrol1, 17],
+            [patrol2, 81],
+        ].forEach(([shipName, spot]) => {
+            if (shipName === battleship || shipName === patrol2) {
+                ships[player][shipName].changeVertical();
+            }
+            boards[player].placeShip(ships[player][shipName], spot);
+        });
     });
+}
 
-    PubSub.publish(E.BOARD.PUB_TO_SCREEN);
+export function getGameState() {
+    return {
+        playerShipsGrid: boards.p.getGridShips(),
+        playerAttacksGrid: boards.p.getGridAttacks(),
+        compAttacksGrid: boards.c.getGridAttacks(),
+        isHuman: Player.isHumanTurn(),
+    };
 }
 
 resetGame();
-
-PubSub.subscribe(E.GAME.FIRE, playRound);
-PubSub.subscribe(E.GAME.TOGGLE, Player.toggle);
-PubSub.subscribe(E.GAME.COMP_TURN, checkCompTurn);
-PubSub.subscribe(E.GAME.AFLOAT, checkGameOver);
