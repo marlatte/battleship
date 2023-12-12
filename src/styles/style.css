@@ -109,12 +109,6 @@ main {
 .square {
     background-color: skyblue;
     border: none;
-
-    /* devMode */
-    color: white;
-    display: grid;
-    place-content: center;
-    font-size: 1rem;
 }
 
 button.square {

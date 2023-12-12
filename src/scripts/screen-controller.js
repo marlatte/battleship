@@ -74,7 +74,6 @@ function updateShipsBoard(
         const place = isPlacementPhase ? ' place' : '';
         shipsGrid.children.push(
             elFactory('div', {
-                textContent: i, // devMode
                 classList: `square${taken}${compAttack}${place}`,
                 dataset: { shipCoord: i },
             })
@@ -93,7 +92,6 @@ function updateAttacksBoard(compAttacksGrid = []) {
         const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
         attacksGrid.children.push(
             elFactory('button', {
-                textContent: i, // devMode
                 classList: `square${playerAttack}`,
                 dataset: { attackCoord: i },
             })
