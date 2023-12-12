@@ -47,7 +47,7 @@ export const Square = () => {
 
     const checkShipAfloat = () => ship?.isAfloat();
 
-    const getShipId = () => ship.getID();
+    const getShipId = () => ship?.getID();
 
     return {
         wasAttacked,
@@ -112,8 +112,41 @@ export const BoardFactory = () => {
         return true;
     };
 
+    const findShip = (id) => {
+        const coords = [];
+        grid.forEach((square, index) => {
+            if (square.getShipId() === id) {
+                coords.push(index);
+            }
+        });
+        return coords;
+    };
+
+    const findAdjacent = (sunkCoords) => {
+        const freeAttacks = new Set();
+        sunkCoords.forEach((spot) => {
+            const testBase = [10, -10];
+            if (!(spot % 10)) testBase.push(-9, 1, 11);
+            else if (!((spot + 1) % 10)) testBase.push(-11, -1, 9);
+            else testBase.push(-9, 1, 11, -11, -1, 9);
+            testBase.forEach((num) => {
+                const coord = spot + num;
+                if (grid[coord]?.wasAttacked() === 0) {
+                    freeAttacks.add(coord);
+                }
+            });
+        });
+        return [...freeAttacks].sort((a, b) => a - b);
+    };
+
     const receiveAttack = (coord) => {
         const result = grid[coord].attack();
+        if (result.sunk) {
+            const sunkCoords = findShip(grid[coord].getShipId());
+            findAdjacent(sunkCoords).forEach((freeAttack) => {
+                grid[freeAttack].attack();
+            });
+        }
         updateShipsAfloat();
         return result;
     };
@@ -125,6 +158,7 @@ export const BoardFactory = () => {
         getGridIllegal,
         placeShip,
         getShipsAfloat,
+        findAdjacent,
         receiveAttack,
     };
 };

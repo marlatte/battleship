@@ -46,13 +46,8 @@ function checkGameOver() {
 
 export function playRound(coord) {
     const opponent = Player.isHumanTurn() ? 'c' : 'p';
-    const { hit, sunk } = boards[opponent].receiveAttack(coord);
+    const { hit } = boards[opponent].receiveAttack(coord);
     const gameOver = checkGameOver();
-
-    if (sunk) {
-        // attack nearby coords
-        console.log('sunk');
-    }
 
     if (!hit) Player.toggle();
 

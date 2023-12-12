@@ -175,5 +175,11 @@ describe('BoardFactory()', () => {
             board.receiveAttack(0);
             expect(board.getShipsAfloat().length).toBe(0);
         });
+        test('Board can find adjacent spots', () => {
+            board.receiveAttack(0);
+            board.receiveAttack(1);
+            const result = board.findAdjacent([0, 1]);
+            expect(result).toEqual([2, 10, 11, 12]);
+        });
     });
 });
