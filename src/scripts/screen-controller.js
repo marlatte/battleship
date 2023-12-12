@@ -38,7 +38,7 @@ function endGameDisplay(winner) {
 
 function handleBoardClick(e) {
     const coord = e.target.dataset.attackCoord;
-    if (!coord) return;
+    if (!coord || e.target.classList.value !== 'square') return;
     document
         .querySelector('.board.attacks')
         .removeEventListener('click', handleBoardClick);

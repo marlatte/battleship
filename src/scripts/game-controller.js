@@ -18,12 +18,6 @@ export const Player = (() => {
             pastHits.clear();
         };
 
-        let lastShot = -1;
-        const setLastShot = (coord) => {
-            lastShot = coord;
-        };
-        const getLastShot = () => lastShot;
-
         const getCompSmart = (options) =>
             options[Math.floor(Math.random() * options.length)];
 
@@ -42,8 +36,6 @@ export const Player = (() => {
             removeHit,
             getPastHits,
             clearHits,
-            setLastShot,
-            getLastShot,
             getCompSmart,
             getCompGuess,
         };
@@ -78,7 +70,6 @@ function checkGameOver() {
 export function playRound(coord) {
     const current = !Player.isHumanTurn() ? 'c' : 'p';
     const opponent = Player.isHumanTurn() ? 'c' : 'p';
-    Player[current].setLastShot(coord);
     const { hit, sunk, sunkCoords } = boards[opponent].receiveAttack(coord);
     const gameOver = checkGameOver();
 
