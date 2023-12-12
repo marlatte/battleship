@@ -122,13 +122,23 @@ export const BoardFactory = () => {
         return coords;
     };
 
-    const findAdjacent = (sunkCoords) => {
+    const findAdjacent = (sunkCoords, noDiagonals = false) => {
         const freeAttacks = new Set();
         sunkCoords.forEach((spot) => {
             const testBase = [10, -10];
             if (!(spot % 10)) testBase.push(-9, 1, 11);
             else if (!((spot + 1) % 10)) testBase.push(-11, -1, 9);
             else testBase.push(-9, 1, 11, -11, -1, 9);
+
+            if (noDiagonals) {
+                [9, -9, 11, -11].forEach((num) => {
+                    if (testBase.includes(num)) {
+                        const i = testBase.indexOf(num);
+                        testBase.splice(i, 1);
+                    }
+                });
+            }
+
             testBase.forEach((num) => {
                 const coord = spot + num;
                 if (grid[coord]?.wasAttacked() === 0) {
@@ -142,8 +152,8 @@ export const BoardFactory = () => {
     const receiveAttack = (coord) => {
         const result = grid[coord].attack();
         if (result.sunk) {
-            const sunkCoords = findShip(grid[coord].getShipId());
-            findAdjacent(sunkCoords).forEach((freeAttack) => {
+            result.sunkCoords = findShip(grid[coord].getShipId());
+            findAdjacent(result.sunkCoords).forEach((freeAttack) => {
                 grid[freeAttack].attack();
             });
         }

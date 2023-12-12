@@ -5,32 +5,63 @@ let gameStarted = false;
 export const checkGameStarted = () => gameStarted;
 
 export const Player = (() => {
-    let human = true;
+    const PlayerFactory = () => {
+        const pastHits = new Set();
+        const addHit = (coord) => {
+            pastHits.add(coord);
+        };
+        const removeHit = (coord) => {
+            pastHits.delete(coord);
+        };
+        const getPastHits = () => [...pastHits];
+        const clearHits = () => {
+            pastHits.clear();
+        };
 
+        let lastShot = -1;
+        const setLastShot = (coord) => {
+            lastShot = coord;
+        };
+        const getLastShot = () => lastShot;
+
+        const getCompSmart = (options) =>
+            options[Math.floor(Math.random() * options.length)];
+
+        const getCompGuess = (grid) => {
+            const options = grid.reduce((acc, curr, index) => {
+                if (curr === 0) {
+                    acc.push(index);
+                }
+                return acc;
+            }, []);
+            return options[Math.floor(Math.random() * options.length)];
+        };
+
+        return {
+            addHit,
+            removeHit,
+            getPastHits,
+            clearHits,
+            setLastShot,
+            getLastShot,
+            getCompSmart,
+            getCompGuess,
+        };
+    };
+    const p = PlayerFactory();
+    const c = PlayerFactory();
+
+    let human = true;
     const toggle = () => {
         human = !human;
     };
 
-    const getCompChoice = (grid) => {
-        const options = grid.reduce((acc, curr, index) => {
-            if (curr === 0) {
-                acc.push(index);
-            }
-            return acc;
-        }, []);
-        return options[Math.floor(Math.random() * options.length)];
-    };
-
     const reset = () => {
         human = true;
+        p.clearHits();
     };
 
-    return {
-        toggle,
-        getCompChoice,
-        reset,
-        isHumanTurn: () => human,
-    };
+    return { p, c, toggle, reset, isHumanTurn: () => human };
 })();
 
 function checkGameOver() {
@@ -45,20 +76,49 @@ function checkGameOver() {
 }
 
 export function playRound(coord) {
+    const current = !Player.isHumanTurn() ? 'c' : 'p';
     const opponent = Player.isHumanTurn() ? 'c' : 'p';
-    const { hit } = boards[opponent].receiveAttack(coord);
+    Player[current].setLastShot(coord);
+    const { hit, sunk, sunkCoords } = boards[opponent].receiveAttack(coord);
     const gameOver = checkGameOver();
 
-    if (!hit) Player.toggle();
+    if (hit) {
+        Player[current].addHit(coord);
+        if (sunk) {
+            sunkCoords.forEach((sunkCoord) => {
+                Player.c.removeHit(sunkCoord);
+            });
+        }
+    } else Player.toggle();
 
     PubSub.publish(E.UPDATE);
 
     if (gameOver) return gameOver;
 
     if (!Player.isHumanTurn()) {
+        let compChoice;
+        const pastHits = Player.c.getPastHits();
+        const lastHit = pastHits[pastHits.length - 1];
+        const options = boards.p.findAdjacent([lastHit], true);
+
+        if (options.length) {
+            compChoice = Player.c.getCompSmart(options);
+        } else if (pastHits.length > 1) {
+            Player.c.removeHit(lastHit);
+            const pastHits2 = Player.c.getPastHits();
+            const lastHit2 = pastHits2[0];
+            const options2 = boards.p.findAdjacent([lastHit2], true);
+            if (options2.length) {
+                compChoice = Player.c.getCompSmart(options2);
+            } else {
+                compChoice = Player.c.getCompGuess(boards.p.getGridAttacks());
+            }
+        } else {
+            compChoice = Player.c.getCompGuess(boards.p.getGridAttacks());
+        }
         setTimeout(() => {
-            playRound(Player.getCompChoice(boards.p.getGridAttacks()));
-        }, 800);
+            playRound(compChoice);
+        }, 400);
     }
     return false;
 }

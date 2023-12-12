@@ -16,7 +16,7 @@ describe('Player module', () => {
     });
     test('Computer can make a legal move', () => {
         const grid = [0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0];
-        const computerChoice = Player.getCompChoice(grid);
+        const computerChoice = Player.c.getCompGuess(grid);
         expect(grid[computerChoice]).toBe(0);
     });
 });
