@@ -1,61 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Marlatte Battleship</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        />
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marlatte Battleship</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
 
-    <body>
-        <header>
-            <h1>Battleship</h1>
-            <button id="home-btn">Home</button>
-        </header>
-        <main>
-            <section class="current-info">
-                <h2><span id="current">Player</span>'s turn.</h2>
-            </section>
-            <section class="game-boards">
-                <div class="container">
-                    <div class="ships"></div>
-                    <div class="attacks"></div>
-                </div>
-            </section>
-            <section class="scores">
-                <p class="score">
-                    Player Ships: <span id="player-score">5</span>
-                </p>
-                <p class="score">
-                    Computer Ships: <span id="computer-score">5</span>
-                </p>
-            </section>
-        </main>
-        <div class="home-screen modal">
-            <div class="pop-up">
-                <h1>Battleship</h1>
-                <p>Let's set up your board!</p>
-                <div class="pre-game-board"></div>
-                <button id="random-board-btn">Place Ships Randomly</button>
-                <button id="start-btn">Start</button>
-            </div>
+  <body>
+    <header>
+      <h1>Battleship</h1>
+      <button id="home-btn">Home</button>
+    </header>
+    <main>
+      <section class="current-info">
+        <h2><span id="current">Player</span>'s turn.</h2>
+      </section>
+      <section class="game-boards">
+        <div class="container">
+          <div class="ships"></div>
+          <div class="attacks"></div>
         </div>
-        <div class="end-screen modal hidden">
-            <div class="pop-up shrunk">
-                <h2>Game Over</h2>
-                <h3 class="winner-line"><span id="winner">XYZ</span> Wins!</h3>
-                <button id="new-game-btn">Play Again</button>
-            </div>
-        </div>
-        <footer>
-            <p>Walker</p>
-            <a href="https://github.com/marlatte" target="_blank"
-                ><i class="fa fa-github"></i
-            ></a>
-            <p>Marlatt</p>
-        </footer>
-    </body>
+      </section>
+      <section class="scores">
+        <p class="score">Player Ships: <span id="player-score">5</span></p>
+        <p class="score">Computer Ships: <span id="computer-score">5</span></p>
+      </section>
+    </main>
+    <div class="home-screen modal">
+      <div class="pop-up">
+        <h1>Battleship</h1>
+        <p>Let's set up your board!</p>
+        <div class="pre-game-board"></div>
+        <button id="random-board-btn">Place Ships Randomly</button>
+        <button id="start-btn">Start</button>
+      </div>
+    </div>
+    <div class="end-screen modal hidden">
+      <div class="pop-up shrunk">
+        <h2>Game Over</h2>
+        <h3 class="winner-line"><span id="winner">XYZ</span> Wins!</h3>
+        <button id="new-game-btn">Play Again</button>
+      </div>
+    </div>
+    <footer>
+      <p>Walker</p>
+      <a href="https://github.com/marlatte" target="_blank"
+        ><i class="fa fa-github"></i
+      ></a>
+      <p>Marlatt</p>
+    </footer>
+  </body>
 </html>

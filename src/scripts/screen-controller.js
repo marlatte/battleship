@@ -1,10 +1,10 @@
 import { E, PubSub } from './pubsub';
 import {
-    checkGameStarted,
-    getGameState,
-    placeRandomShips,
-    playRound,
-    resetGame,
+  checkGameStarted,
+  getGameState,
+  placeRandomShips,
+  playRound,
+  resetGame,
 } from './game-controller';
 import { elFactory, htmlFactory } from './helpers';
 
@@ -29,126 +29,126 @@ const endPopUp = endScreen.querySelector('.pop-up');
 const newGameBtn = document.querySelector('#new-game-btn');
 
 function endGameDisplay(winner) {
-    winnerDisplay.textContent = winner;
-    endScreen.classList.remove('hidden');
-    setTimeout(() => {
-        endPopUp.classList.remove('shrunk');
-    }, 150);
+  winnerDisplay.textContent = winner;
+  endScreen.classList.remove('hidden');
+  setTimeout(() => {
+    endPopUp.classList.remove('shrunk');
+  }, 150);
 }
 
 function handleBoardClick(e) {
-    const coord = e.target.dataset.attackCoord;
-    if (!coord || e.target.classList.value !== 'square') return;
-    document
-        .querySelector('.board.attacks')
-        .removeEventListener('click', handleBoardClick);
-    const gameOver = playRound(coord);
-    if (gameOver) {
-        endGameDisplay(gameOver);
-    }
+  const coord = e.target.dataset.attackCoord;
+  if (!coord || e.target.classList.value !== 'square') return;
+  document
+    .querySelector('.board.attacks')
+    .removeEventListener('click', handleBoardClick);
+  const gameOver = playRound(coord);
+  if (gameOver) {
+    endGameDisplay(gameOver);
+  }
 }
 
 function updateCurrentPlayer(isHuman = true) {
-    if (isHuman) {
-        currentTurnText.textContent = 'Player';
-        document
-            .querySelector('.board.attacks')
-            .addEventListener('click', handleBoardClick);
-    } else {
-        currentTurnText.textContent = 'Computer';
-    }
+  if (isHuman) {
+    currentTurnText.textContent = 'Player';
+    document
+      .querySelector('.board.attacks')
+      .addEventListener('click', handleBoardClick);
+  } else {
+    currentTurnText.textContent = 'Computer';
+  }
 }
 
 function updateShipsBoard(
-    isPlacementPhase = false,
-    playerShipsGrid = [],
-    playerAttacksGrid = []
+  isPlacementPhase = false,
+  playerShipsGrid = [],
+  playerAttacksGrid = []
 ) {
-    const appendTarget = isPlacementPhase ? preGameBoard : shipsBoard;
-    appendTarget.textContent = '';
-    const shipsGrid = elFactory('div', { classList: 'board ships' });
+  const appendTarget = isPlacementPhase ? preGameBoard : shipsBoard;
+  appendTarget.textContent = '';
+  const shipsGrid = elFactory('div', { classList: 'board ships' });
 
-    for (let i = 0; i < 100; i += 1) {
-        const taken = playerShipsGrid[i] ? ' ship' : '';
-        const compAttack = ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
-        const place = isPlacementPhase ? ' place' : '';
-        shipsGrid.children.push(
-            elFactory('div', {
-                classList: `square${taken}${compAttack}${place}`,
-                dataset: { shipCoord: i },
-            })
-        );
-    }
+  for (let i = 0; i < 100; i += 1) {
+    const taken = playerShipsGrid[i] ? ' ship' : '';
+    const compAttack = ['', ' miss', ' hit'][playerAttacksGrid[i]] ?? '';
+    const place = isPlacementPhase ? ' place' : '';
+    shipsGrid.children.push(
+      elFactory('div', {
+        classList: `square${taken}${compAttack}${place}`,
+        dataset: { shipCoord: i },
+      })
+    );
+  }
 
-    appendTarget.appendChild(htmlFactory(shipsGrid));
+  appendTarget.appendChild(htmlFactory(shipsGrid));
 }
 
 function updateAttacksBoard(compAttacksGrid = []) {
-    attacksBoard.textContent = '';
+  attacksBoard.textContent = '';
 
-    const attacksGrid = elFactory('div', { classList: 'board attacks' });
+  const attacksGrid = elFactory('div', { classList: 'board attacks' });
 
-    for (let i = 0; i < 100; i += 1) {
-        const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
-        attacksGrid.children.push(
-            elFactory('button', {
-                classList: `square${playerAttack}`,
-                dataset: { attackCoord: i },
-            })
-        );
-    }
+  for (let i = 0; i < 100; i += 1) {
+    const playerAttack = ['', ' miss', ' hit'][compAttacksGrid[i]] ?? '';
+    attacksGrid.children.push(
+      elFactory('button', {
+        classList: `square${playerAttack}`,
+        dataset: { attackCoord: i },
+      })
+    );
+  }
 
-    attacksBoard.appendChild(htmlFactory(attacksGrid));
+  attacksBoard.appendChild(htmlFactory(attacksGrid));
 }
 
 function updateScores(pScore, cScore) {
-    pScoreDisplay.textContent = pScore;
-    cScoreDisplay.textContent = cScore;
+  pScoreDisplay.textContent = pScore;
+  cScoreDisplay.textContent = cScore;
 }
 
 function updateDisplay(isPlacementPhase = false) {
-    // Gets info from game-controller
-    const {
-        playerShipsGrid,
-        playerAttacksGrid,
-        compAttacksGrid,
-        isHuman,
-        pScore,
-        cScore,
-    } = getGameState();
+  // Gets info from game-controller
+  const {
+    playerShipsGrid,
+    playerAttacksGrid,
+    compAttacksGrid,
+    isHuman,
+    pScore,
+    cScore,
+  } = getGameState();
 
-    // Updates boards, current player, and scores
-    updateShipsBoard(isPlacementPhase, playerShipsGrid, playerAttacksGrid);
-    updateAttacksBoard(compAttacksGrid);
-    updateCurrentPlayer(isHuman);
-    updateScores(pScore, cScore);
+  // Updates boards, current player, and scores
+  updateShipsBoard(isPlacementPhase, playerShipsGrid, playerAttacksGrid);
+  updateAttacksBoard(compAttacksGrid);
+  updateCurrentPlayer(isHuman);
+  updateScores(pScore, cScore);
 }
 
 function startApp() {
-    resetGame();
-    endScreen.classList.add('hidden');
-    homeScreen.classList.remove('hidden');
-    updateDisplay(true);
+  resetGame();
+  endScreen.classList.add('hidden');
+  homeScreen.classList.remove('hidden');
+  updateDisplay(true);
 }
 
 startBtn.addEventListener('click', () => {
-    if (checkGameStarted()) {
-        updateDisplay();
-        homeScreen.classList.add('hidden');
-    }
+  if (checkGameStarted()) {
+    updateDisplay();
+    homeScreen.classList.add('hidden');
+  }
 });
 
 randomBoardBtn.addEventListener('click', () => {
-    placeRandomShips('p');
-    placeRandomShips('c');
-    updateDisplay(true);
+  placeRandomShips('p');
+  placeRandomShips('c');
+  updateDisplay(true);
 });
 
 homeBtn.addEventListener('click', startApp);
 
 newGameBtn.addEventListener('click', () => {
-    startApp();
-    updateDisplay();
+  startApp();
+  updateDisplay();
 });
 
 PubSub.subscribe(E.UPDATE, updateDisplay);

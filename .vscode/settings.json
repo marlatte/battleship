@@ -3,6 +3,6 @@
         "source.fixAll.eslint": "explicit"
     },
     "eslint.validate": ["javascript"],
-    "editor.tabSize": 4,
-    "prettier.tabWidth": 4
+    "editor.tabSize": 2,
+    "prettier.tabWidth": 2
 }

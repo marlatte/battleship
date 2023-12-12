@@ -3,42 +3,42 @@
 *,
 *::before,
 *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    /* color: unset; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* color: unset; */
 }
 
 a {
-    color: unset;
-    text-decoration: none;
+  color: unset;
+  text-decoration: none;
 }
 
 /* ---------------     /Reboot     --------------- */
 /* ---------------     Utilities & Universals     --------------- */
 
 :root {
-    --square-dim: 3svh;
+  --square-dim: 3svh;
 }
 
 body {
-    height: 100svh;
-    display: flex;
-    flex-direction: column;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 
 .shrunk {
-    transform: scale(0);
+  transform: scale(0);
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 @media (min-width: 700px) {
-    :root {
-        --square-dim: 5svh;
-    }
+  :root {
+    --square-dim: 5svh;
+  }
 }
 
 /* ---------------     /Utilities & Universals     --------------- */
@@ -47,103 +47,103 @@ body {
 /* ---------------     Header     --------------- */
 
 header {
-    padding: 10px;
+  padding: 10px;
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #home-btn {
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 1.2rem;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 1.2rem;
 }
 
 /* ---------------     /Header     --------------- */
 
 /* ---------------     Main     --------------- */
 main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 3svh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3svh;
 }
 
 .current-info {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 @media (min-width: 700px) {
-    main {
-        gap: 10svh;
-    }
+  main {
+    gap: 10svh;
+  }
 }
 
 /* ---------------     Boards     --------------- */
 .game-boards {
-    display: grid;
-    place-content: center;
+  display: grid;
+  place-content: center;
 }
 
 .container {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
-    background-color: grey;
+  background-color: grey;
 }
 
 .board {
-    padding: 3px;
-    display: grid;
-    grid-template-columns: repeat(10, var(--square-dim));
-    grid-template-rows: repeat(10, var(--square-dim));
-    gap: 3px;
-    background-color: #fff;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: repeat(10, var(--square-dim));
+  grid-template-rows: repeat(10, var(--square-dim));
+  gap: 3px;
+  background-color: #fff;
 }
 
 .square {
-    background-color: skyblue;
-    border: none;
+  background-color: skyblue;
+  border: none;
 }
 
 button.square {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 button.square:not(.miss):not(.hit):not(.ship):hover {
-    background-color: hsl(205, 75%, 50%);
+  background-color: hsl(205, 75%, 50%);
 }
 
 .square.ship {
-    background-color: navy;
+  background-color: navy;
 }
 
 .square.hit {
-    background-color: red;
+  background-color: red;
 }
 
 .square.miss {
-    background-color: yellow;
+  background-color: yellow;
 }
 
 @media (min-width: 700px) {
-    .container {
-        flex-direction: row;
-    }
+  .container {
+    flex-direction: row;
+  }
 }
 /* ---------------     /Boards     --------------- */
 
 /* ---------------     Scores     --------------- */
 
 .scores {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 
-    text-align: right;
+  text-align: right;
 }
 
 /* ---------------     /Scores     --------------- */
@@ -152,8 +152,8 @@ button.square:not(.miss):not(.hit):not(.ship):hover {
 /* ---------------     Home-Screen     --------------- */
 
 .modal button {
-    padding: 10px;
-    font-size: 1.2rem;
+  padding: 10px;
+  font-size: 1.2rem;
 }
 
 /* ---------------     /Home-Screen     --------------- */
@@ -161,37 +161,37 @@ button.square:not(.miss):not(.hit):not(.ship):hover {
 /* ---------------     End Screen     --------------- */
 
 .modal {
-    z-index: 1;
-    position: fixed;
-    height: 100svh;
-    width: 100vw;
+  z-index: 1;
+  position: fixed;
+  height: 100svh;
+  width: 100vw;
 
-    display: grid;
-    place-content: center;
+  display: grid;
+  place-content: center;
 
-    background-color: #0000004d;
-    backdrop-filter: blur(2px);
+  background-color: #0000004d;
+  backdrop-filter: blur(2px);
 }
 
 .pop-up {
-    padding: 20px;
+  padding: 20px;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
 
-    border: 1px solid #000;
-    border-radius: 5px;
-    background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #fff;
 
-    text-align: center;
+  text-align: center;
 
-    transition: all 1s;
+  transition: all 1s;
 }
 
 .end-screen .pop-up {
-    min-width: 60vw;
+  min-width: 60vw;
 }
 
 /* ---------------     /End Screen     --------------- */
@@ -199,26 +199,26 @@ button.square:not(.miss):not(.hit):not(.ship):hover {
 /* ---------------     Footer     --------------- */
 
 footer {
-    padding: 5px;
+  padding: 5px;
 
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
 
-    background-color: black;
-    color: white;
-    font-size: 16px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
 }
 
 .fa.fa-github {
-    color: currentColor;
-    font-size: 20px;
+  color: currentColor;
+  font-size: 20px;
 
-    &:hover {
-        transition: transform 0.4s ease-in-out;
-        transform: rotate(-360deg) scale(1.3);
-    }
+  &:hover {
+    transition: transform 0.4s ease-in-out;
+    transform: rotate(-360deg) scale(1.3);
+  }
 }
 /* ---------------     /Footer     --------------- */
 
