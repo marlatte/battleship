@@ -7,18 +7,19 @@
     <script defer src="index.bundle.js"></script></head>
 
     <body>
-        <header><h1>Battleship</h1></header>
+        <header>
+            <h1>Battleship</h1>
+            <button id="home-btn">Home</button>
+        </header>
         <main>
-            <section class="buttons">
-                <div class="starter">
-                    <button id="start-btn">Place Ships</button>
-                </div>
-            </section>
             <section class="current-info">
                 <p><span id="current">Player</span>'s turn.</p>
             </section>
             <section class="game-boards">
-                <div class="container"></div>
+                <div class="container">
+                    <div class="ships"></div>
+                    <div class="attacks"></div>
+                </div>
             </section>
             <section class="scores">
                 <p class="score">
@@ -29,12 +30,16 @@
                 </p>
             </section>
         </main>
-        <div class="home-screen hidden">
-            <h1>Battleship</h1>
-            <section class="placement-board"></section>
-            <button id="random-board">Place Ships Randomly</button>
+        <div class="home-screen modal hidden">
+            <div class="pop-up">
+                <h1>Battleship</h1>
+                <p>Let's set up your board!</p>
+                <div class="pre-game-board"></div>
+                <button id="random-board-btn">Place Ships Randomly</button>
+                <button id="start-btn">Start</button>
+            </div>
         </div>
-        <div class="modal hidden">
+        <div class="end-screen modal hidden">
             <div class="pop-up shrunk">
                 <h2>Game Over</h2>
                 <p class="winner-line"><span id="winner">XYZ</span> Wins!</p>

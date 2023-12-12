@@ -14,6 +14,7 @@
 
 :root {
     --eg-var: red;
+    --square-dim: 5vw;
 }
 
 body {
@@ -30,10 +31,30 @@ body {
     display: none !important;
 }
 
+@media (min-width: 700px) {
+    :root {
+        --square-dim: 3vw;
+    }
+}
+
 /* ---------------     /Utilities & Universals     --------------- */
 /* ---------------     CONTENT     --------------- */
 
 /* ---------------     Header     --------------- */
+
+header {
+    padding: 15px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+#home-btn {
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 1.2rem;
+}
+
 /* ---------------     /Header     --------------- */
 
 /* ---------------     Main     --------------- */
@@ -65,7 +86,6 @@ main {
 }
 
 .board {
-    --square-dim: 7vw;
     padding: 3px;
     display: grid;
     grid-template-columns: repeat(10, var(--square-dim));
@@ -89,6 +109,10 @@ button.square {
     cursor: pointer;
 }
 
+button.square:not(.miss):not(.hit):not(.ship):hover {
+    background-color: hsl(205, 75%, 50%);
+}
+
 .square.ship {
     background-color: navy;
 }
@@ -104,10 +128,6 @@ button.square {
 @media (min-width: 700px) {
     .container {
         flex-direction: row;
-    }
-
-    .board {
-        --square-dim: 4vw;
     }
 }
 /* ---------------     /Boards     --------------- */
@@ -126,30 +146,14 @@ button.square {
 
 /* ---------------     Home-Screen     --------------- */
 
-.home-screen {
-    z-index: 1;
-    position: absolute;
-    height: 100svh;
-    width: 100vw;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-
-    background-color: navy;
-    color: white;
-}
-
-#random-board {
+.home-screen button {
     padding: 10px;
     font-size: 1.2rem;
 }
 
 /* ---------------     /Home-Screen     --------------- */
 
-/* ---------------     Modal     --------------- */
+/* ---------------     End Screen     --------------- */
 
 .modal {
     z-index: 1;
@@ -160,7 +164,7 @@ button.square {
     display: grid;
     place-content: center;
 
-    background-color: #80808052;
+    background-color: #0000004d;
     backdrop-filter: blur(2px);
 }
 
@@ -181,7 +185,7 @@ button.square {
     transition: all 1s;
 }
 
-/* ---------------     /Modal     --------------- */
+/* ---------------     /End Screen     --------------- */
 
 /* ---------------     Footer     --------------- */
 

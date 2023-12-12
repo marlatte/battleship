@@ -1,6 +1,9 @@
 import { boards, ships } from './board';
 import { E, PubSub } from './pubsub';
 
+let gameStarted = false;
+export const checkGameStarted = () => gameStarted;
+
 export const Player = (() => {
     let human = true;
 
@@ -30,7 +33,6 @@ export const Player = (() => {
     };
 })();
 
-export const Game = (() => {})();
 function checkGameOver() {
     let winner = '';
     if (boards.p.getShipsAfloat().length < 1) {
@@ -66,37 +68,25 @@ export function playRound(coord) {
     return false;
 }
 
-function resetGame() {
+export function resetGame() {
+    gameStarted = false;
     Player.reset();
     boards.reset();
     ships.reset();
     PubSub.publish(E.UPDATE);
 }
 
-// devMode
-export function testShipPlacement() {
-    resetGame();
-
-    ['p', 'c'].forEach((player) => {
-        [
-            ['carrier', 0],
-            ['battleship', 22],
-            ['cruiser', 45],
-            ['destroyer', 94],
-            ['submarine', 67],
-            ['patrol1', 17],
-            ['patrol2', 81],
-        ].forEach(([shipName, spot]) => {
-            if (shipName === 'battleship' || shipName === 'patrol2') {
-                ships[player][shipName].changeVertical();
-            }
-            boards[player].placeShip(ships[player][shipName], spot);
-        });
-    });
+export function getOpenIndices(player) {
+    return boards[player]
+        .getGridIllegal()
+        .map((val, index) => ({ val, index }))
+        .filter((item) => item.val === 0)
+        .map((item) => item.index);
 }
 
 export function placeRandomShips(player) {
     boards.reset(player);
+    gameStarted = true;
     const failedSpots = [];
     const shipNames = [
         'carrier',
@@ -111,11 +101,7 @@ export function placeRandomShips(player) {
         const ship = ships[player][name];
         let success = false;
         while (failedSpots.length < 88 && !success) {
-            const openIndices = boards[player]
-                .getGridIllegal()
-                .map((val, index) => ({ val, index }))
-                .filter((item) => item.val === 0)
-                .map((item) => item.index);
+            const openIndices = getOpenIndices(player);
             const spot =
                 openIndices[
                     Math.floor(Math.random() * (openIndices.length - 1))
@@ -136,9 +122,6 @@ export function placeRandomShips(player) {
             }
         }
     });
-    if (failedSpots.length > 88) {
-        throw new Error('Not all ships placed');
-    }
 }
 
 export function getGameState() {
