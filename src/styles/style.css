@@ -158,7 +158,7 @@ button.square:not(.miss):not(.hit):not(.ship):hover {
 
 /* ---------------     Home-Screen     --------------- */
 
-.home-screen button {
+.modal button {
     padding: 10px;
     font-size: 1.2rem;
 }
@@ -195,6 +195,10 @@ button.square:not(.miss):not(.hit):not(.ship):hover {
     text-align: center;
 
     transition: all 1s;
+}
+
+.end-screen .pop-up {
+    min-width: 60vw;
 }
 
 /* ---------------     /End Screen     --------------- */

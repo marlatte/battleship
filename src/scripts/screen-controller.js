@@ -25,14 +25,14 @@ const cScoreDisplay = document.querySelector('#computer-score');
 // Post-game Vars
 const winnerDisplay = document.querySelector('#winner');
 const endScreen = document.querySelector('.end-screen');
-const popUp = document.querySelector('.pop-up');
+const endPopUp = endScreen.querySelector('.pop-up');
 const newGameBtn = document.querySelector('#new-game-btn');
 
 function endGameDisplay(winner) {
     winnerDisplay.textContent = winner;
     endScreen.classList.remove('hidden');
     setTimeout(() => {
-        popUp.classList.toggle('shrunk');
+        endPopUp.classList.remove('shrunk');
     }, 150);
 }
 
